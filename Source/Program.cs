@@ -22,7 +22,8 @@ internal sealed class Program {
     private const ConsoleColor HighlightColor = ConsoleColor.DarkCyan;
 
     /// <summary>Path of the dictionary file used for spellchecking.</summary>
-    private const string DictionaryPath = "../../../Resources/Dictionary/Dictionary.txt";
+    private static readonly string DictionaryPath = Path.Combine(AppContext.BaseDirectory,
+        "Resources", "Dictionary", "Dictionary.txt");
 
     /// <summary>Content of the dictionary file used for spellchecking.</summary>
     private static readonly IReadOnlyList<string> Words = File.ReadLines(DictionaryPath).ToList();
@@ -54,8 +55,8 @@ internal sealed class Program {
     ];
 
     /// <summary>Descriptions displayed for each edit distance calculation algorithm.</summary>
-    private static readonly IReadOnlyDictionary<IDistanceCalculator, string> DistanceCalculatorDescriptions
-        = new Dictionary<IDistanceCalculator, string>() {
+    private static readonly IReadOnlyDictionary<IDistanceCalculator, string> DistanceCalculatorDescriptions =
+        new Dictionary<IDistanceCalculator, string>() {
             [RecursiveCalculator.Instance] = "Recursive (Slow)",
             [IterativeFullMatrixCalculator.Instance] = "Iterative Full Matrix (Medium)",
             [IterativeOptimizedMatrixCalculator.Instance] = "Iterative Optimized Matrix (Fast)"

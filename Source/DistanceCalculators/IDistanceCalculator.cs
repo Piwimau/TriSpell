@@ -31,7 +31,7 @@ internal interface IDistanceCalculator {
     /// An example for using this method might be the following:
     /// <code>
     /// IDistanceCalculator distanceCalculator = ...; 
-    /// Console.WriteLine(distanceCalculator.Calculate("Cat", "Car")); // Output: 1
+    /// Console.WriteLine(distanceCalculator.Distance("Cat", "Car")); // Output: 1
     /// </code>
     /// </example>
     /// </para>
