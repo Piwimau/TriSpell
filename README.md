@@ -48,7 +48,7 @@ Please feel free to experiment with and adjust this to your own preference ;).
 
 TriSpell was originally developed using `.NET 8` and `C# 12`. I plan on upgrading the project to
 future versions to take advantage of new language features if feasible to do so. For the time being,
-simply follow these steps to checkout TriSpell:
+simply follow these steps to check out TriSpell:
 
 0. Make sure you have `.NET 8` or newer installed on your machine.
 

@@ -14,11 +14,8 @@
         <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     </PropertyGroup>
     <ItemGroup>
-        <Folder Include="Resources\" />
-    </ItemGroup>
-    <ItemGroup>
-      <None Update="Resources\Dictionary\Dictionary.txt">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+        <None Update="Resources\Dictionary\Dictionary.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 </Project>
