@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+
 using TriSpell.Source.DistanceCalculators;
 
 namespace TriSpell.Source;
 
 internal sealed class Program {
 
-    /// <summary>Represents an enumeration of all different accuracies.</summary>
+    /// <summary>Represents an enumeration of all available accuracies.</summary>
     private enum Accuracy { Low, Medium, High }
 
     /// <summary>Default foreground color of the console application.</summary>
@@ -22,25 +23,29 @@ internal sealed class Program {
     private const ConsoleColor HighlightColor = ConsoleColor.DarkCyan;
 
     /// <summary>Path of the dictionary file used for spellchecking.</summary>
-    private static readonly string DictionaryPath = Path.Combine(AppContext.BaseDirectory,
-        "Resources", "Dictionary", "Dictionary.txt");
+    private static readonly string DictionaryPath = Path.Combine(
+        AppContext.BaseDirectory,
+        "Resources",
+        "Dictionary",
+        "Dictionary.txt"
+    );
 
     /// <summary>Content of the dictionary file used for spellchecking.</summary>
-    private static readonly IReadOnlyList<string> Words = File.ReadLines(DictionaryPath).ToList();
+    private static readonly IReadOnlyList<string> Words = [.. File.ReadLines(DictionaryPath)];
 
     /// <summary>List of all accuracies, cached for efficiency.</summary>
     private static readonly IReadOnlyList<Accuracy> Accuracies = [.. Enum.GetValues<Accuracy>()];
 
     /// <summary>Descriptions displayed for each accuracy.</summary>
-    private static readonly IReadOnlyDictionary<Accuracy, string> AccuracyDescriptions =
+    private static readonly IReadOnlyDictionary<Accuracy, string> DescriptionByAccuracy =
         new Dictionary<Accuracy, string>() {
-            [Accuracy.Low] = "Low (Distance at most 3 characters)",
-            [Accuracy.Medium] = "Medium (Distance at most 2 characters)",
-            [Accuracy.High] = "High (Distance at most 1 character)"
+            [Accuracy.Low] = "Low (Maximum Edit Distance = 3 Characters)",
+            [Accuracy.Medium] = "Medium (Maximum Edit Distance = 2 Characters)",
+            [Accuracy.High] = "High (Maximum Edit Distance = 1 Character)",
         };
 
     /// <summary>Maximum allowed edit distance for each accuracy.</summary>
-    private static readonly IReadOnlyDictionary<Accuracy, int> MaxEditDistanceByAccuracy =
+    private static readonly IReadOnlyDictionary<Accuracy, int> MaximumEditDistanceByAccuracy =
         new Dictionary<Accuracy, int>() {
             [Accuracy.Low] = 3,
             [Accuracy.Medium] = 2,
@@ -55,8 +60,8 @@ internal sealed class Program {
     ];
 
     /// <summary>Descriptions displayed for each edit distance calculation algorithm.</summary>
-    private static readonly IReadOnlyDictionary<IDistanceCalculator, string> DistanceCalculatorDescriptions =
-        new Dictionary<IDistanceCalculator, string>() {
+    private static readonly IReadOnlyDictionary<IDistanceCalculator, string>
+        DescriptionByDistanceCalculator = new Dictionary<IDistanceCalculator, string>() {
             [RecursiveCalculator.Instance] = "Recursive (Slow)",
             [IterativeFullMatrixCalculator.Instance] = "Iterative Full Matrix (Medium)",
             [IterativeOptimizedMatrixCalculator.Instance] = "Iterative Optimized Matrix (Fast)"
@@ -78,10 +83,9 @@ internal sealed class Program {
     /// </exception>
     private static void WriteColored(string text, ConsoleColor foregroundColor) {
         ArgumentNullException.ThrowIfNull(text, nameof(text));
-        ConsoleColor currentForegroundColor = Console.ForegroundColor;
-        Console.ForegroundColor = foregroundColor;
+        (foregroundColor, Console.ForegroundColor) = (Console.ForegroundColor, foregroundColor);
         Console.Write(text);
-        Console.ForegroundColor = currentForegroundColor;
+        Console.ForegroundColor = foregroundColor;
     }
 
     /// <summary>
@@ -101,10 +105,9 @@ internal sealed class Program {
     /// </exception>
     private static void WriteLineColored(string text, ConsoleColor foregroundColor) {
         ArgumentNullException.ThrowIfNull(text, nameof(text));
-        ConsoleColor currentForegroundColor = Console.ForegroundColor;
-        Console.ForegroundColor = foregroundColor;
+        (foregroundColor, Console.ForegroundColor) = (Console.ForegroundColor, foregroundColor);
         Console.WriteLine(text);
-        Console.ForegroundColor = currentForegroundColor;
+        Console.ForegroundColor = foregroundColor;
     }
 
     /// <summary>
@@ -121,7 +124,8 @@ internal sealed class Program {
     private static void DrawMainMenu(IDistanceCalculator distanceCalculator, Accuracy accuracy) {
         ArgumentNullException.ThrowIfNull(distanceCalculator, nameof(distanceCalculator));
         Console.Clear();
-        WriteLineColored("""
+        WriteLineColored(
+           """
             ▄▄▄█████▓ ██▀███   ██▓  ██████  ██▓███  ▓█████  ██▓     ██▓    
             ▓  ██▒ ▓▒▓██ ▒ ██▒▓██▒▒██    ▒ ▓██░  ██▒▓█   ▀ ▓██▒    ▓██▒    
             ▒ ▓██░ ▒░▓██ ░▄█ ▒▒██▒░ ▓██▄   ▓██░ ██▓▒▒███   ▒██░    ▒██░    
@@ -132,17 +136,19 @@ internal sealed class Program {
               ░        ░░   ░  ▒ ░░  ░  ░  ░░          ░     ░ ░     ░ ░   
                         ░      ░        ░              ░  ░    ░  ░    ░  ░
 
-            """, HighlightColor);
+            """,
+           HighlightColor
+        );
         WriteColored("Welcome to ", ForegroundColor);
         WriteColored("TriSpell", HighlightColor);
-        WriteLineColored(", a simple command line spellchecker.\n", ForegroundColor);
+        WriteLineColored(", a small and simple console spellchecker.\n", ForegroundColor);
         WriteLineColored("Current Settings", ForegroundColor);
-        string algorithmDescription = DistanceCalculatorDescriptions[distanceCalculator];
-        string accuracyDescription = AccuracyDescriptions[accuracy];
-        int tableWidth = Math.Max($"Algorithm │ {algorithmDescription}".Length,
-            $"Accuracy  │ {accuracyDescription}".Length);
+        string distanceCalculatorDescription = DescriptionByDistanceCalculator[distanceCalculator];
+        string accuracyDescription = DescriptionByAccuracy[accuracy];
+        int tableWidth = "Algorithm | ".Length
+            + Math.Max(distanceCalculatorDescription.Length, accuracyDescription.Length);
         WriteLineColored(new string('─', tableWidth), ForegroundColor);
-        WriteLineColored($"Algorithm │ {algorithmDescription}", ForegroundColor);
+        WriteLineColored($"Algorithm │ {distanceCalculatorDescription}", ForegroundColor);
         WriteLineColored($"Accuracy  │ {accuracyDescription}\n", ForegroundColor);
         WriteColored("[ESC] ", HighlightColor);
         WriteLineColored("Exit Program", ForegroundColor);
@@ -171,28 +177,28 @@ internal sealed class Program {
     /// <paramref name="optionDescriptions"/> is <see langword="null"/>.
     /// </exception>
     private static bool TrySelectOption<T>(
-            string prompt,
-            IReadOnlyList<T> options,
-            IReadOnlyDictionary<T, string> optionDescriptions,
-            [NotNullWhen(true)] out T? selectedOption) where T : notnull {
+        string prompt,
+        IReadOnlyList<T> options,
+        IReadOnlyDictionary<T, string> optionDescriptions,
+        [NotNullWhen(true)] out T? selectedOption
+    ) where T : notnull {
         ArgumentNullException.ThrowIfNull(prompt, nameof(prompt));
         ArgumentNullException.ThrowIfNull(options, nameof(options));
         ArgumentNullException.ThrowIfNull(optionDescriptions, nameof(optionDescriptions));
         Console.Clear();
         int index = 0;
-        ConsoleKey consoleKey;
-        do {
+        while (true) {
             Console.SetCursorPosition(0, 0);
             WriteLineColored($"{prompt}\n", ForegroundColor);
             for (int i = 0; i < options.Count; i++) {
-                WriteColored("(", ForegroundColor);
+                WriteColored("[", ForegroundColor);
                 if (i == index) {
                     WriteColored("*", HighlightColor);
                 }
                 else {
                     WriteColored(" ", ForegroundColor);
                 }
-                WriteColored(") ", ForegroundColor);
+                WriteColored("] ", ForegroundColor);
                 WriteLineColored(optionDescriptions[options[i]], ForegroundColor);
             }
             WriteColored("\n[ESC]   ", HighlightColor);
@@ -201,8 +207,7 @@ internal sealed class Program {
             WriteLineColored("Change Selected Option", ForegroundColor);
             WriteColored("[ENTER] ", HighlightColor);
             WriteLineColored("Confirm Selected Option", ForegroundColor);
-            consoleKey = Console.ReadKey(true).Key;
-            switch (consoleKey) {
+            switch (Console.ReadKey(true).Key) {
                 case ConsoleKey.UpArrow:
                     if (index > 0) {
                         index--;
@@ -216,11 +221,11 @@ internal sealed class Program {
                 case ConsoleKey.Enter:
                     selectedOption = options[index];
                     return true;
+                case ConsoleKey.Escape:
+                    selectedOption = default;
+                    return false;
             }
         }
-        while (consoleKey != ConsoleKey.Escape);
-        selectedOption = default;
-        return false;
     }
 
     /// <summary>Performs spellchecking on a word entered by the user.</summary>
@@ -240,39 +245,44 @@ internal sealed class Program {
         Console.CursorVisible = false;
         WriteColored("\nThe word ", ForegroundColor);
         WriteColored(source, HighlightColor);
-        if (Words.Contains(source)) {
+        IReadOnlyList<(string Target, int Distance)> possibleMatches = [.. Words
+            .Select(target => (
+                Target: target,
+                EditDistance: distanceCalculator.Distance(source, target)
+            ))
+            .Where(pair => pair.EditDistance <= MaximumEditDistanceByAccuracy[accuracy])
+            .OrderBy(pair => pair.EditDistance)
+        ];
+        if (possibleMatches.Count == 0) {
+            WriteLineColored(
+                " might be misspelled (no possible matches were found).",
+                ForegroundColor
+            );
+        }
+        else if (possibleMatches[0].Distance == 0) {
             WriteLineColored(" is spelled correctly.", ForegroundColor);
         }
         else {
-            IReadOnlyList<(string Target, int Distance)> possibleMatches = [.. Words
-                .Select(target => (Target: target, Distance: distanceCalculator.Distance(source, target)))
-                .Where(pair => pair.Distance <= MaxEditDistanceByAccuracy[accuracy])
-                .OrderBy(pair => pair.Distance)
-            ];
-            if (possibleMatches.Count == 0) {
-                WriteLineColored(" might be misspelled, but no possible matches were found.",
-                    ForegroundColor);
-            }
-            else {
-                WriteLineColored(" might be misspelled, the following possible matches were found.",
-                    ForegroundColor);
-                int maxTargetLength = possibleMatches.Max(match => match.Target.Length);
-                string header = $"{"\nPossible Match".PadRight(maxTargetLength)} │ Distance";
-                WriteLineColored(header, ForegroundColor);
-                WriteLineColored(new string('─', header.Length), ForegroundColor);
-                foreach ((string target, int distance) in possibleMatches) {
-                    int paddingLength = Math.Max(maxTargetLength, "Possible Match".Length);
-                    WriteColored($"{target.PadRight(paddingLength)} │ ", ForegroundColor);
-                    Accuracy targetAccuracy = MaxEditDistanceByAccuracy
-                        .Last(pair => distance <= pair.Value).Key;
-                    ConsoleColor foregroundColor = targetAccuracy switch {
-                        Accuracy.Low => ConsoleColor.Red,
-                        Accuracy.Medium => ConsoleColor.Yellow,
-                        Accuracy.High => ConsoleColor.Green,
-                        _ => throw new InvalidOperationException("Unreachable.")
-                    };
-                    WriteLineColored(distance.ToString(), foregroundColor);
-                }
+            WriteLineColored(
+                " might be misspelled, the following possible matches were found.",
+                ForegroundColor
+            );
+            int maxTargetLength = possibleMatches.Max(match => match.Target.Length);
+            string header = "\nPossible Match".PadRight(maxTargetLength) + " │ Distance";
+            WriteLineColored(header, ForegroundColor);
+            WriteLineColored(new string('─', header.Length), ForegroundColor);
+            foreach ((string target, int editDistance) in possibleMatches) {
+                int paddingLength = Math.Max(maxTargetLength, "Possible Match".Length);
+                WriteColored($"{target.PadRight(paddingLength)} │ ", ForegroundColor);
+                Accuracy targetAccuracy = MaximumEditDistanceByAccuracy
+                    .Last(pair => editDistance <= pair.Value).Key;
+                ConsoleColor foregroundColor = targetAccuracy switch {
+                    Accuracy.Low => ConsoleColor.Red,
+                    Accuracy.Medium => ConsoleColor.Yellow,
+                    Accuracy.High => ConsoleColor.Green,
+                    _ => throw new InvalidOperationException("Unreachable.")
+                };
+                WriteLineColored(editDistance.ToString(), foregroundColor);
             }
         }
         WriteLineColored("\nPress any key to continue.", ForegroundColor);
@@ -295,15 +305,22 @@ internal sealed class Program {
             consoleKey = Console.ReadKey(true).Key;
             switch (consoleKey) {
                 case ConsoleKey.D1:
-                    if (TrySelectOption("Select one of the following algorithms.",
-                            DistanceCalculators, DistanceCalculatorDescriptions,
-                            out IDistanceCalculator? selectedDistanceCalculator)) {
+                    if (TrySelectOption(
+                            "Select one of the following algorithms.",
+                            DistanceCalculators,
+                            DescriptionByDistanceCalculator,
+                            out IDistanceCalculator? selectedDistanceCalculator)
+                        ) {
                         distanceCalculator = selectedDistanceCalculator;
                     }
                     break;
                 case ConsoleKey.D2:
-                    if (TrySelectOption("Select one of the following accuracies.",
-                            Accuracies, AccuracyDescriptions, out Accuracy selectedAccuracy)) {
+                    if (TrySelectOption(
+                            "Select one of the following accuracies.",
+                            Accuracies,
+                            DescriptionByAccuracy,
+                            out Accuracy selectedAccuracy)
+                        ) {
                         accuracy = selectedAccuracy;
                     }
                     break;

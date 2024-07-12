@@ -24,7 +24,9 @@ internal sealed class IterativeOptimizedMatrixCalculator : IDistanceCalculator {
     /// <summary>Maximum size for allocating the distances rows on the stack.</summary>
     private const int MaxStackAllocSize = 128;
 
-    /// <summary>Gets the instance of this <see cref="IterativeOptimizedMatrixCalculator"/>.</summary>
+    /// <summary>
+    /// Gets the instance of this <see cref="IterativeOptimizedMatrixCalculator"/>.
+    /// </summary>
     public static IterativeOptimizedMatrixCalculator Instance { get; } = new();
 
     /// <summary>Initializes a new <see cref="IterativeOptimizedMatrixCalculator"/>.</summary>
@@ -37,9 +39,11 @@ internal sealed class IterativeOptimizedMatrixCalculator : IDistanceCalculator {
     public int Distance(ReadOnlySpan<char> source, ReadOnlySpan<char> target) {
         int size = target.Length + 1;
         Span<int> previousDistances = (size <= MaxStackAllocSize)
-            ? stackalloc int[size] : new int[size];
+            ? stackalloc int[size]
+            : new int[size];
         Span<int> currentDistances = (size <= MaxStackAllocSize)
-            ? stackalloc int[size] : new int[size];
+            ? stackalloc int[size]
+            : new int[size];
         // Empty source prefix can only be transformed into target by inserting all characters.
         for (int j = 0; j < previousDistances.Length; j++) {
             previousDistances[j] = j;

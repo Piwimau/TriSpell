@@ -2,7 +2,9 @@
 
 namespace TriSpell.Source.DistanceCalculators;
 
-/// <summary>Represents a calculator for determining the edit distance between two strings.</summary>
+/// <summary>
+/// Represents a calculator for determining the edit distance between two strings.
+/// </summary>
 /// <remarks>
 /// <para>
 /// The edit distance, also known as Levenshtein distance after Soviet mathematician Vladimir
@@ -22,9 +24,9 @@ internal interface IDistanceCalculator {
     /// <remarks>
     /// <para>
     /// The edit distance is defined as the minimum number of single character edits (i. e.
-    /// insertions, deletions and substitutions) required to transform a source string into a target.
-    /// See <see href="https://en.wikipedia.org/wiki/Levenshtein_distance">Wikipedia</see> for more
-    /// information.
+    /// insertions, deletions and substitutions) required to transform a source string into a
+    /// target. See <see href="https://en.wikipedia.org/wiki/Levenshtein_distance">Wikipedia</see>
+    /// for more information.
     /// </para>
     /// <para>
     /// <example>

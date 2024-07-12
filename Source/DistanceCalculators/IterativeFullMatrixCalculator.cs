@@ -60,8 +60,10 @@ internal sealed class IterativeFullMatrixCalculator : IDistanceCalculator {
                 // If the characters match, there is no additional cost for substitution.
                 int substitution = distances[((i - 1) * columns) + (j - 1)]
                     + ((source[i - 1] == target[j - 1]) ? 0 : 1);
-                distances[(i * columns) + j] = Math.Min(Math.Min(insertion, deletion),
-                    substitution);
+                distances[(i * columns) + j] = Math.Min(
+                    Math.Min(insertion, deletion),
+                    substitution
+                );
             }
         }
         return distances[((rows - 1) * columns) + (columns - 1)];
