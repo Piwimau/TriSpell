@@ -31,7 +31,7 @@ internal sealed class Program {
     );
 
     /// <summary>Content of the dictionary file used for spellchecking.</summary>
-    private static readonly IReadOnlyList<string> Words = [.. File.ReadLines(DictionaryPath)];
+    private static readonly IReadOnlySet<string> Words = File.ReadLines(DictionaryPath).ToHashSet();
 
     /// <summary>List of all accuracies, cached for efficiency.</summary>
     private static readonly IReadOnlyList<Accuracy> Accuracies = [.. Enum.GetValues<Accuracy>()];
@@ -187,7 +187,8 @@ internal sealed class Program {
         ArgumentNullException.ThrowIfNull(optionDescriptions, nameof(optionDescriptions));
         Console.Clear();
         int index = 0;
-        while (true) {
+        ConsoleKey consoleKey;
+        do {
             Console.SetCursorPosition(0, 0);
             WriteLineColored($"{prompt}\n", ForegroundColor);
             for (int i = 0; i < options.Count; i++) {
@@ -207,7 +208,8 @@ internal sealed class Program {
             WriteLineColored("Change Selected Option", ForegroundColor);
             WriteColored("[ENTER] ", HighlightColor);
             WriteLineColored("Confirm Selected Option", ForegroundColor);
-            switch (Console.ReadKey(true).Key) {
+            consoleKey = Console.ReadKey(true).Key;
+            switch (consoleKey) {
                 case ConsoleKey.UpArrow:
                     if (index > 0) {
                         index--;
@@ -221,11 +223,11 @@ internal sealed class Program {
                 case ConsoleKey.Enter:
                     selectedOption = options[index];
                     return true;
-                case ConsoleKey.Escape:
-                    selectedOption = default;
-                    return false;
             }
         }
+        while (consoleKey != ConsoleKey.Escape);
+        selectedOption = default;
+        return false;
     }
 
     /// <summary>Performs spellchecking on a word entered by the user.</summary>
@@ -245,44 +247,46 @@ internal sealed class Program {
         Console.CursorVisible = false;
         WriteColored("\nThe word ", ForegroundColor);
         WriteColored(source, HighlightColor);
-        IReadOnlyList<(string Target, int Distance)> possibleMatches = [.. Words
-            .Select(target => (
-                Target: target,
-                EditDistance: distanceCalculator.Distance(source, target)
-            ))
-            .Where(pair => pair.EditDistance <= MaximumEditDistanceByAccuracy[accuracy])
-            .OrderBy(pair => pair.EditDistance)
-        ];
-        if (possibleMatches.Count == 0) {
-            WriteLineColored(
-                " might be misspelled (no possible matches were found).",
-                ForegroundColor
-            );
-        }
-        else if (possibleMatches[0].Distance == 0) {
+        if (Words.Contains(source)) {
             WriteLineColored(" is spelled correctly.", ForegroundColor);
         }
         else {
-            WriteLineColored(
-                " might be misspelled, the following possible matches were found.",
-                ForegroundColor
-            );
-            int maxTargetLength = possibleMatches.Max(match => match.Target.Length);
-            string header = "\nPossible Match".PadRight(maxTargetLength) + " │ Distance";
-            WriteLineColored(header, ForegroundColor);
-            WriteLineColored(new string('─', header.Length), ForegroundColor);
-            foreach ((string target, int editDistance) in possibleMatches) {
-                int paddingLength = Math.Max(maxTargetLength, "Possible Match".Length);
-                WriteColored($"{target.PadRight(paddingLength)} │ ", ForegroundColor);
-                Accuracy targetAccuracy = MaximumEditDistanceByAccuracy
-                    .Last(pair => editDistance <= pair.Value).Key;
-                ConsoleColor foregroundColor = targetAccuracy switch {
-                    Accuracy.Low => ConsoleColor.Red,
-                    Accuracy.Medium => ConsoleColor.Yellow,
-                    Accuracy.High => ConsoleColor.Green,
-                    _ => throw new InvalidOperationException("Unreachable.")
-                };
-                WriteLineColored(editDistance.ToString(), foregroundColor);
+            IReadOnlyList<(string Target, int Distance)> possibleMatches = [.. Words
+                .Select(target => (
+                    Target: target,
+                    EditDistance: distanceCalculator.Distance(source, target)
+                ))
+                .Where(pair => pair.EditDistance <= MaximumEditDistanceByAccuracy[accuracy])
+                .OrderBy(pair => pair.EditDistance)
+            ];
+            if (possibleMatches.Count == 0) {
+                WriteLineColored(
+                    " might be misspelled (no possible matches were found).",
+                    ForegroundColor
+                );
+            }
+            else {
+                WriteLineColored(
+                    " might be misspelled, the following possible matches were found.",
+                    ForegroundColor
+                );
+                int maxTargetLength = possibleMatches.Max(match => match.Target.Length);
+                string header = "\nPossible Match".PadRight(maxTargetLength) + " │ Distance";
+                WriteLineColored(header, ForegroundColor);
+                WriteLineColored(new string('─', header.Length), ForegroundColor);
+                foreach ((string target, int editDistance) in possibleMatches) {
+                    int paddingLength = Math.Max(maxTargetLength, "Possible Match".Length);
+                    WriteColored($"{target.PadRight(paddingLength)} │ ", ForegroundColor);
+                    Accuracy targetAccuracy = MaximumEditDistanceByAccuracy
+                        .Last(pair => editDistance <= pair.Value).Key;
+                    ConsoleColor foregroundColor = targetAccuracy switch {
+                        Accuracy.Low => ConsoleColor.Red,
+                        Accuracy.Medium => ConsoleColor.Yellow,
+                        Accuracy.High => ConsoleColor.Green,
+                        _ => throw new InvalidOperationException("Unreachable.")
+                    };
+                    WriteLineColored(editDistance.ToString(), foregroundColor);
+                }
             }
         }
         WriteLineColored("\nPress any key to continue.", ForegroundColor);
