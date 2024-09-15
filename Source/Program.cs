@@ -10,7 +10,7 @@ namespace TriSpell.Source;
 
 internal sealed class Program {
 
-    /// <summary>Represents an enumeration of all available accuracies.</summary>
+    /// <summary>Represents an enumeration of all accuracies available for spellchecking.</summary>
     private enum Accuracy { Low, Medium, High }
 
     /// <summary>Default foreground color of the console application.</summary>

@@ -6,18 +6,15 @@ namespace TriSpell.Source.DistanceCalculators;
 /// Represents an even more advanced implementation of an <see cref="IDistanceCalculator"/>.
 /// </summary>
 /// <remarks>
-/// <para>
 /// This implementation builds upon the fundamental algorithm of the
 /// <see cref="IterativeFullMatrixCalculator"/>. However, it makes use of an important observation:
 /// For the purpose of calculating the edit distance at a certain position in the matrix, it is
 /// sufficient to consider only the current and previous row of edit distances. By therefore
 /// reducing the full matrix down to only two rows, the memory footprint and runtime improve
 /// significantly.
-/// </para>
-/// <para>
+/// <para/>
 /// Note that this class is implemented as a singleton, as it does not feature any meaningful state
 /// that would justify having more than one instance at runtime.
-/// </para>
 /// </remarks>
 internal sealed class IterativeOptimizedMatrixCalculator : IDistanceCalculator {
 
@@ -32,7 +29,7 @@ internal sealed class IterativeOptimizedMatrixCalculator : IDistanceCalculator {
     /// <summary>Initializes a new <see cref="IterativeOptimizedMatrixCalculator"/>.</summary>
     /// <remarks>
     /// Note that this constructor is marked <see langword="private"/>,
-    /// as the <see cref="IterativeOptimizedMatrixCalculator"/> is implemented as a singleton.
+    /// as <see cref="IterativeOptimizedMatrixCalculator"/> is implemented as a singleton.
     /// </remarks>
     private IterativeOptimizedMatrixCalculator() { }
 
@@ -56,8 +53,8 @@ internal sealed class IterativeOptimizedMatrixCalculator : IDistanceCalculator {
                 int substitution = previousDistances[j] + ((source[i] == target[j]) ? 0 : 1);
                 currentDistances[j + 1] = Math.Min(Math.Min(insertion, deletion), substitution);
             }
-            // Swap the spans for the next iteration. Sadly, we can't use the swap using tuples
-            // (i. e. (a, b) = (b, a)), since Span<T> may not be used as type argument.
+            // Swap the spans for the next iteration. Sadly, we can't use the new swap using tuples
+            // syntax (i. e. (a, b) = (b, a)), since Span<T> may not be used as type argument.
             Span<int> temp = previousDistances;
             previousDistances = currentDistances;
             currentDistances = temp;

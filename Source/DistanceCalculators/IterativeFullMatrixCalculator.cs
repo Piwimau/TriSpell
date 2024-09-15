@@ -6,19 +6,16 @@ namespace TriSpell.Source.DistanceCalculators;
 /// Represents a slightly more advanced implementation of an <see cref="IDistanceCalculator"/>.
 /// </summary>
 /// <remarks>
-/// <para>
 /// This implementation employs techniques of dynamic programming: In comparison to the
 /// <see cref="RecursiveCalculator"/>, it avoids redundant calculations by storing the edit
 /// distances between all prefixes of the source and target string in a two-dimensional matrix.
 /// The final value calculated in the lower right-hand corner is the actual edit distance between
 /// the full strings.
-/// See <see href="https://en.wikipedia.org/wiki/Levenshtein_distance">Wikipedia</see> for more
+/// See <see href="https://en.wikipedia.org/wiki/Levenshtein_distance">this article</see> for more
 /// information.
-/// </para>
-/// <para>
+/// <para/>
 /// Note that this class is implemented as a singleton, as it does not feature any meaningful state
 /// that would justify having more than one instance at runtime.
-/// </para>
 /// </remarks>
 internal sealed class IterativeFullMatrixCalculator : IDistanceCalculator {
 
@@ -31,7 +28,7 @@ internal sealed class IterativeFullMatrixCalculator : IDistanceCalculator {
     /// <summary>Initializes a new <see cref="IterativeFullMatrixCalculator"/>.</summary>
     /// <remarks>
     /// Note that this constructor is marked <see langword="private"/>,
-    /// as the <see cref="IterativeFullMatrixCalculator"/> is implemented as a singleton.
+    /// as <see cref="IterativeFullMatrixCalculator"/> is implemented as a singleton.
     /// </remarks>
     private IterativeFullMatrixCalculator() { }
 

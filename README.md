@@ -22,7 +22,7 @@ source string into the into the target string. It may be implemented using a var
 algorithms, and as such TriSpell offers three of the most common implementations for the user to
 choose from:
 
-| Algorithm                   | Efficiency  | Description                                                                                                                                                                                                                                                                                                                             |
+| Algorithm                   | Efficiency  | Description                                                                                                                                                                                                                                                                                                                                   |
 | --------------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | 
 | Recursive                   | --          | A naive, recursive implementation that more or less directly corresponds to the original mathematical definition by Vladimir Levenshtein. It shows a very poor efficiency (especially on larger inputs), since a lot of the prefixes of the source and target strings are unnecessarily compared more than once (unless memoization is used). |
 | Iterative Full Matrix       | +           | This slightly more advanced implementation employs techniques of dynamic programming. It uses a two-dimensional matrix to cache the edit distances between all prefixes of the source and target strings, thus avoiding unnecessary calculations.                                                                                             |
@@ -53,16 +53,16 @@ simply follow these steps to check out TriSpell:
 0. Make sure you have `.NET 8` or newer installed on your machine.
 
 1. Clone the repository (or download the source code) to a directory of your choice.
-    ```shell
-    git clone https://github.com/Piwimau/TriSpell.git ./TriSpell
-    cd ./TriSpell
-    ```
+   ```shell
+   git clone https://github.com/Piwimau/TriSpell.git ./TriSpell
+   cd ./TriSpell
+   ```
 
 2. Build and run the application.
-    ```shell
-    dotnet build
-    dotnet run
-    ```
+   ```shell
+   dotnet build
+   dotnet run
+   ```
 
 Alternatively, if you have Visual Studio installed on your machine, simply open the provided
 [solution file](TriSpell.sln) and proceed from there.
