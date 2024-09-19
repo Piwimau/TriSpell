@@ -41,9 +41,9 @@ internal sealed class Program {
     /// <summary>Description displayed for each <see cref="Accuracy"/>.</summary>
     private static readonly FrozenDictionary<Accuracy, string> AccuracyToDescription =
         FrozenDictionary.ToFrozenDictionary([
-            KeyValuePair.Create(Accuracy.Low, "Low (Maximum Edit Distance = 3 Characters)"),
-            KeyValuePair.Create(Accuracy.Medium, "Medium (Maximum Edit Distance = 2 Characters)"),
-            KeyValuePair.Create(Accuracy.High, "High (Maximum Edit Distance = 1 Character)")
+            KeyValuePair.Create(Accuracy.Low, "Low (Max. Edit Distance = 3)"),
+            KeyValuePair.Create(Accuracy.Medium, "Medium (Max. Edit Distance = 2)"),
+            KeyValuePair.Create(Accuracy.High, "High (Max. Edit Distance = 1)")
         ]);
 
     /// <summary>Maximum allowed edit distance for each <see cref="Accuracy"/>.</summary>
@@ -74,15 +74,15 @@ internal sealed class Program {
         FrozenDictionary.ToFrozenDictionary([
             KeyValuePair.Create<IDistanceCalculator, string>(
                 RecursiveCalculator.Instance,
-                "Recursive (Slow)"
+                "Slow (Recursive)"
             ),
             KeyValuePair.Create<IDistanceCalculator, string>(
                 IterativeFullMatrixCalculator.Instance,
-                "Iterative Full Matrix (Medium)"
+                "Fast (Iterative Full Matrix)"
             ),
             KeyValuePair.Create<IDistanceCalculator, string>(
                 IterativeOptimizedMatrixCalculator.Instance,
-                "Iterative Optimized Matrix (Fast)"
+                "Very Fast (Iterative Optimized Matrix)"
             )
         ]);
 
@@ -286,7 +286,7 @@ internal sealed class Program {
                     ForegroundColor
                 );
                 int maxTargetLength = possibleMatches.Max(match => match.Target.Length);
-                string header = "\nPossible Match".PadRight(maxTargetLength) + " │ Distance";
+                string header = "\nPossible Match".PadRight(maxTargetLength) + " │ Edit Distance";
                 WriteLineColored(header, ForegroundColor);
                 WriteLineColored(new string('─', header.Length), ForegroundColor);
                 foreach ((string target, int editDistance) in possibleMatches) {
