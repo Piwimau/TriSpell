@@ -273,6 +273,7 @@ internal sealed class Program {
                 ))
                 .Where(pair => pair.EditDistance <= AccuracyToEditDistance[accuracy])
                 .OrderBy(pair => pair.EditDistance)
+                .ThenBy(pair => pair.Target)
             ];
             if (possibleMatches.Count == 0) {
                 WriteLineColored(
