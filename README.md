@@ -38,13 +38,13 @@ future, it is currently defined as follows:
 
 | Accuracy Level | Maximum Edit Distance |
 |----------------|-----------------------|
-|  Low           | 3                     |
-|  Medium        | 2                     |
-|  High          | 1                     |
+| Low            | 3                     |
+| Medium         | 2                     |
+| High           | 1                     |
 
 Feel free to experiment and adjust this to your own preference ;).
 
-## Dependencies and Usage
+## Dependencies and usage
 
 TriSpell was originally developed using `.NET 8` and `C# 12`. I plan to update the project to
 to take advantage of new language features in future versions if feasible. For the time being,
@@ -53,15 +53,16 @@ just follow these steps to try out TriSpell:
 0. Make sure you have `.NET 8` or a later version installed on your machine.
 
 1. Clone the repository (or download the source code) to a directory of your choice.
+   
    ```shell
    git clone https://github.com/Piwimau/TriSpell.git ./TriSpell
    cd ./TriSpell
    ```
 
-2. Build and run the application.
+2. Run the application in release mode to achieve the best performance.
+   
    ```shell
-   dotnet build -c Release
-   dotnet run
+   dotnet run -c Release
    ```
 
 Alternatively, if you have Visual Studio installed on your machine, simply open the provided
