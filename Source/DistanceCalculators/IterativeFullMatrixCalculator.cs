@@ -19,8 +19,8 @@ namespace TriSpell.Source.DistanceCalculators;
 /// </remarks>
 internal sealed class IterativeFullMatrixCalculator : IDistanceCalculator {
 
-    /// <summary>Maximum size for allocating the distances matrix on the stack.</summary>
-    private const int MaxStackAllocSize = 256;
+    /// <summary>Maximum limit for allocating the distances matrix on the stack.</summary>
+    private const int MaxStackLimit = 256;
 
     /// <summary>Gets the instance of this <see cref="IterativeFullMatrixCalculator"/>.</summary>
     public static IterativeFullMatrixCalculator Instance { get; } = new();
@@ -40,7 +40,7 @@ internal sealed class IterativeFullMatrixCalculator : IDistanceCalculator {
         // one-dimensional buffer for improved locality and performance. This also means that we
         // have to do indexing on our own, therefore the edit distance at (i, j) is found at
         // distances[(i * columns) + j].
-        Span<int> distances = (size <= MaxStackAllocSize) ? stackalloc int[size] : new int[size];
+        Span<int> distances = (size <= MaxStackLimit) ? stackalloc int[size] : new int[size];
         distances[0] = 0;
         // Source prefixes can only be transformed into an empty string by deleting all characters.
         for (int i = 1; i < rows; i++) {

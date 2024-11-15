@@ -6,15 +6,15 @@ TriSpell is a small and simple console application that provides basic spell che
 
 ## Features
 
-As a fun little side project of mine, TriSpell was intended to explore how basic spellchecking could
-be implemented using the so called
+As a fun little side project of mine, TriSpell was intended to explore how basic spell checking
+could be implemented using the so called
 [Levenshtein distance](https://en.wikipedia.org/wiki/Levenshtein_distance) metric. Named after the
 soviet mathematician Vladimir Levenshtein who originally defined it in 1965, this metric computes
-the similarity of two sequences of characters (more commonly referred to as
-"strings" in most programming languages of today):
+the similarity of two sequences of characters (more commonly referred to as "strings" in most
+programming languages of today):
 
-- A **source** string, which can be thought of as a word entered by the user.
-- A **target** string representing a word that the user may have intended to type (but misspelled).
+- A source string, which can be thought of as a word entered by the user.
+- A target string representing a word that the user may have intended to type (but misspelled).
 
 The metric itself, sometimes also just called "edit distance", is defined as the minimum number of
 of single-character edits (i. e. insertions, deletions, or substitutions) required to transform the
@@ -46,11 +46,11 @@ Feel free to experiment and adjust this to your own preference ;).
 
 ## Dependencies and usage
 
-TriSpell was originally developed using `.NET 8` and `C# 12`. I plan to update the project to
-to take advantage of new language features in future versions if feasible. For the time being,
-just follow these steps to try out TriSpell:
+TriSpell was originally developed using `.NET 8` and `C# 12`. I recently upgraded it to `.NET 9` and
+`C# 13` and plan to continue doing so in the future to take advantage of new language features and
+performance improvements. For the time being, just follow these steps to try out TriSpell:
 
-0. Make sure you have `.NET 8` or a later version installed on your machine.
+0. Make sure you have `.NET 9` or a later version installed on your machine.
 
 1. Clone the repository (or download the source code) to a directory of your choice.
    

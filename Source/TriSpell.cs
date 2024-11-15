@@ -5,23 +5,22 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-
 using TriSpell.Source.DistanceCalculators;
 
 namespace TriSpell.Source;
 
-internal sealed class Program {
+internal sealed class TriSpell {
 
-    /// <summary>Represents an enumeration of all accuracies available for spellchecking.</summary>
+    /// <summary>Represents an enumeration of all supported accuracies for spellchecking.</summary>
     private enum Accuracy { Low, Medium, High }
 
-    /// <summary>Default foreground color of the console application.</summary>
+    /// <summary>Default foreground color of the application.</summary>
     private const ConsoleColor ForegroundColor = ConsoleColor.White;
 
-    /// <summary>Default background color of the console application.</summary>
+    /// <summary>Default background color of the application.</summary>
     private const ConsoleColor BackgroundColor = ConsoleColor.Black;
 
-    /// <summary>Default highlight color of the console application.</summary>
+    /// <summary>Default highlight color of the application.</summary>
     private const ConsoleColor HighlightColor = ConsoleColor.DarkCyan;
 
     /// <summary>Path of the dictionary file used for spellchecking.</summary>
@@ -135,10 +134,8 @@ internal sealed class Program {
     /// Draws the main menu including the currently selected <see cref="IDistanceCalculator"/> and
     /// <see cref="Accuracy"/>.
     /// </summary>
-    /// <param name="distanceCalculator">
-    /// Currently selected <see cref="IDistanceCalculator"/>.
-    /// </param>
-    /// <param name="accuracy">Currently selected <see cref="Accuracy"/>.</param>
+    /// <param name="distanceCalculator">Current <see cref="IDistanceCalculator"/>.</param>
+    /// <param name="accuracy">Current <see cref="Accuracy"/>.</param>
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="distanceCalculator"/> is <see langword="null"/>.
     /// </exception>
@@ -246,10 +243,8 @@ internal sealed class Program {
     }
 
     /// <summary>Performs spellchecking on a word entered by the user.</summary>
-    /// <param name="distanceCalculator">
-    /// Currently selected <see cref="IDistanceCalculator"/>.
-    /// </param>
-    /// <param name="accuracy">Currently selected <see cref="Accuracy"/>.</param>
+    /// <param name="distanceCalculator">Current <see cref="IDistanceCalculator"/>.</param>
+    /// <param name="accuracy">Current <see cref="Accuracy"/>.</param>
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="distanceCalculator"/> is <see langword="null"/>.
     /// </exception>

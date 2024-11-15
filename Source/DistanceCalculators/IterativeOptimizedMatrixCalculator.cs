@@ -10,7 +10,7 @@ namespace TriSpell.Source.DistanceCalculators;
 /// <see cref="IterativeFullMatrixCalculator"/>. However, it makes use of an important observation:
 /// For the purpose of calculating the edit distance at a certain position in the matrix, it is
 /// sufficient to consider only the current and previous row of edit distances. By therefore
-/// reducing the full matrix down to only two rows, the memory footprint and runtime improve
+/// reducing the full matrix down to only two rows, the memory footprint and runtime may improve
 /// significantly.
 /// <para/>
 /// Note that this class is implemented as a singleton, as it does not feature any meaningful state
@@ -18,8 +18,8 @@ namespace TriSpell.Source.DistanceCalculators;
 /// </remarks>
 internal sealed class IterativeOptimizedMatrixCalculator : IDistanceCalculator {
 
-    /// <summary>Maximum size for allocating the distances rows on the stack.</summary>
-    private const int MaxStackAllocSize = 128;
+    /// <summary>Maximum limit for allocating the distances rows on the stack.</summary>
+    private const int MaxStackLimit = 128;
 
     /// <summary>
     /// Gets the instance of this <see cref="IterativeOptimizedMatrixCalculator"/>.
@@ -35,12 +35,8 @@ internal sealed class IterativeOptimizedMatrixCalculator : IDistanceCalculator {
 
     public int Distance(ReadOnlySpan<char> source, ReadOnlySpan<char> target) {
         int size = target.Length + 1;
-        Span<int> previousDistances = (size <= MaxStackAllocSize)
-            ? stackalloc int[size]
-            : new int[size];
-        Span<int> currentDistances = (size <= MaxStackAllocSize)
-            ? stackalloc int[size]
-            : new int[size];
+        Span<int> previousDistances = (size <= MaxStackLimit) ? stackalloc int[size] : new int[size];
+        Span<int> currentDistances = (size <= MaxStackLimit) ? stackalloc int[size] : new int[size];
         // Empty source prefix can only be transformed into target by inserting all characters.
         for (int j = 0; j < previousDistances.Length; j++) {
             previousDistances[j] = j;
@@ -54,7 +50,7 @@ internal sealed class IterativeOptimizedMatrixCalculator : IDistanceCalculator {
                 currentDistances[j + 1] = Math.Min(Math.Min(insertion, deletion), substitution);
             }
             // Swap the spans for the next iteration. Sadly, we can't use the new swap using tuples
-            // syntax (i. e. (a, b) = (b, a)), since Span<T> may not be used as type argument.
+            // syntax (i. e. (a, b) = (b, a)), since Span<T> can't be used as type argument.
             Span<int> temp = previousDistances;
             previousDistances = currentDistances;
             currentDistances = temp;

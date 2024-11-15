@@ -9,7 +9,7 @@ namespace TriSpell.Source.DistanceCalculators;
 /// This implementation is based on the original mathematical definition by Vladimir Levenshtein
 /// from 1965. Although the algorithm is relatively straightforward and easy to understand,
 /// it performs rather poorly (especially on larger inputs), as a lot of the edit distances between
-/// the prefixes of the strings are calculated redundantly.
+/// the prefixes of the strings are redundantly calculated.
 /// See <see href="https://en.wikipedia.org/wiki/Levenshtein_distance">this article</see> for more
 /// information.
 /// <para/>
@@ -18,7 +18,7 @@ namespace TriSpell.Source.DistanceCalculators;
 /// </remarks>
 internal sealed class RecursiveCalculator : IDistanceCalculator {
 
-    /// <summary>Gets the instance of this <see cref="RecursiveCalculator"/> .</summary>
+    /// <summary>Gets the instance of this <see cref="RecursiveCalculator"/>.</summary>
     public static RecursiveCalculator Instance { get; } = new();
 
     /// <summary>Initializes a new <see cref="RecursiveCalculator"/>.</summary>
