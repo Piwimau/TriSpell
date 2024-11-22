@@ -5,8 +5,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TriSpell", "TriSpell.csproj", "{A5558917-C0D5-4D28-AF85-988ED851209C}"
 EndProject
 Global
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {DF3EC48B-1B66-4A36-81AA-76B06178F852}
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A5558917-C0D5-4D28-AF85-988ED851209C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -14,11 +15,10 @@ Global
 		{A5558917-C0D5-4D28-AF85-988ED851209C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5558917-C0D5-4D28-AF85-988ED851209C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DF3EC48B-1B66-4A36-81AA-76B06178F852}
 	EndGlobalSection
 EndGlobal
