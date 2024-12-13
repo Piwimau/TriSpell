@@ -40,9 +40,9 @@ internal sealed class TriSpell {
     /// <summary>Description displayed for each <see cref="Accuracy"/>.</summary>
     private static readonly FrozenDictionary<Accuracy, string> AccuracyToDescription =
         FrozenDictionary.ToFrozenDictionary([
-            KeyValuePair.Create(Accuracy.Low, "Low (Max. Edit Distance = 3)"),
-            KeyValuePair.Create(Accuracy.Medium, "Medium (Max. Edit Distance = 2)"),
-            KeyValuePair.Create(Accuracy.High, "High (Max. Edit Distance = 1)")
+            KeyValuePair.Create(Accuracy.Low, "Low (Maximum Edit Distance = 3)"),
+            KeyValuePair.Create(Accuracy.Medium, "Medium (Maximum Edit Distance = 2)"),
+            KeyValuePair.Create(Accuracy.High, "High (Maximum Edit Distance = 1)")
         ]);
 
     /// <summary>Maximum allowed edit distance for each <see cref="Accuracy"/>.</summary>
@@ -165,9 +165,9 @@ internal sealed class TriSpell {
         string accuracyDescription = AccuracyToDescription[accuracy];
         int tableWidth = "Algorithm | ".Length
             + Math.Max(distanceCalculatorDescription.Length, accuracyDescription.Length);
-        WriteLineColored(new string('─', tableWidth), ForegroundColor);
-        WriteLineColored($"Algorithm │ {distanceCalculatorDescription}", ForegroundColor);
-        WriteLineColored($"Accuracy  │ {accuracyDescription}\n", ForegroundColor);
+        WriteLineColored(new string('-', tableWidth), ForegroundColor);
+        WriteLineColored($"Algorithm | {distanceCalculatorDescription}", ForegroundColor);
+        WriteLineColored($"Accuracy  | {accuracyDescription}\n", ForegroundColor);
         WriteColored("[ESC] ", HighlightColor);
         WriteLineColored("Exit Program", ForegroundColor);
         WriteColored("[1]   ", HighlightColor);
@@ -278,16 +278,16 @@ internal sealed class TriSpell {
             }
             else {
                 WriteLineColored(
-                    " might be misspelled, the following possible matches were found.",
+                    " might be misspelled, the following possible matches were found.\n",
                     ForegroundColor
                 );
                 int maxTargetLength = possibleMatches.Max(match => match.Target.Length);
-                string header = "\nPossible Match".PadRight(maxTargetLength) + " │ Edit Distance";
+                string header = "Possible Match".PadRight(maxTargetLength) + " | Edit Distance";
                 WriteLineColored(header, ForegroundColor);
-                WriteLineColored(new string('─', header.Length), ForegroundColor);
+                WriteLineColored(new string('-', header.Length), ForegroundColor);
                 foreach ((string target, int editDistance) in possibleMatches) {
                     int paddingLength = Math.Max(maxTargetLength, "Possible Match".Length);
-                    WriteColored($"{target.PadRight(paddingLength)} │ ", ForegroundColor);
+                    WriteColored($"{target.PadRight(paddingLength)} | ", ForegroundColor);
                     Accuracy targetAccuracy = AccuracyToEditDistance
                         .Last(pair => editDistance <= pair.Value).Key;
                     WriteLineColored(
