@@ -159,8 +159,11 @@ internal sealed class TriSpell {
         );
         WriteColored("Welcome to ", ForegroundColor);
         WriteColored("TriSpell", HighlightColor);
-        WriteLineColored(", a small and simple console spellchecker.\n", ForegroundColor);
-        WriteLineColored("Current Settings", ForegroundColor);
+        WriteLineColored(
+            ", a small and simple console application for basic spellchecking.\n",
+            ForegroundColor
+        );
+        WriteLineColored("Settings", ForegroundColor);
         string distanceCalculatorDescription = DistanceCalculatorToDescription[distanceCalculator];
         string accuracyDescription = AccuracyToDescription[accuracy];
         int tableWidth = "Algorithm | ".Length
