@@ -68,6 +68,12 @@ performance improvements. For the time being, just follow these steps to try out
 Alternatively, if you have Visual Studio installed on your machine, simply open the provided
 [solution file](TriSpell.sln) and proceed from there.
 
+## Contributing
+
+I don't really expect any contributions, as TriSpell is more or less just one of my little side
+projects. However, if you find a bug or have a nice suggestion, feel free to open an issue and I'll
+see what I can do.
+
 ## Acknowledgements
 
 I was originally inspired to create TriSpell after watching
