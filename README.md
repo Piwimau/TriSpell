@@ -1,26 +1,24 @@
 # TriSpell
 
-TriSpell is a small and simple console application that provides basic spell checking.
+TriSpell is a small and simple console application for basic spellchecking.
 
 ![Overview](Resources/Overview.png)
 
 ## Features
 
 As a fun little side project of mine, TriSpell was intended to explore how basic spell checking
-could be implemented using the so called
+could be implemented using the so-called
 [Levenshtein distance](https://en.wikipedia.org/wiki/Levenshtein_distance) metric. Named after the
-soviet mathematician Vladimir Levenshtein who originally defined it in 1965, this metric computes
-the similarity of two sequences of characters (more commonly referred to as "strings" in most
-programming languages of today):
+Soviet mathematician Vladimir Levenshtein, who originally defined it in 1965, this metric computes
+the similarity of two sequences of characters (or "strings" in most modern programming languages):
 
-- A source string, which can be thought of as a word entered by the user.
-- A target string representing a word that the user may have intended to type (but misspelled).
+- A source string that can be thought of as a word which the user typed.
+- A target string that represents a word the user may have intended to type (but misspelled).
 
-The metric itself, sometimes also just called "edit distance", is defined as the minimum number of
-of single-character edits (i. e. insertions, deletions, or substitutions) required to transform the
-source string into the into the target string. It may be implemented using a variety of different
-algorithms, and as such TriSpell offers three of the more common implementations for the user to
-choose from:
+The metric itself, sometimes simply called "edit distance", is defined as the minimum number of
+single-character edits (i. e. insertions, deletions, or substitutions) required to transform the
+source string into the target string. It can be implemented using a variety of different algorithms,
+and as such TriSpell offers three of the more common implementations for the user to choose from:
 
 | Algorithm                  | Efficiency | Description                                                                                                                                                                                                                                                                                                                                  |
 |----------------------------|------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| 
@@ -32,8 +30,8 @@ For more details on the individual algorithms see
 [this article](https://en.wikipedia.org/wiki/Levenshtein_distance) from Wikipedia, which also
 contains useful pseudocode I used as reference for the implementation.
 
-In addition to the algorithms, the user may choose from three different accuracy levels. While the
-specific implementation (i. e. the maximum edit distance per level) may be subject to change in the
+In addition to the algorithms, the user can choose from three different levels of accuracy.
+While the specific implementation (i. e. the maximum edit distance per level) may change in the
 future, it is currently defined as follows:
 
 | Accuracy Level | Maximum Edit Distance |
@@ -42,13 +40,13 @@ future, it is currently defined as follows:
 | Medium         | 2                     |
 | High           | 1                     |
 
-Feel free to experiment and adjust this to your own preference ;).
+Feel free to experiment with this and customize it to your liking. 😉
 
 ## Dependencies and usage
 
 TriSpell was originally developed using `.NET 8` and `C# 12`. I recently upgraded it to `.NET 9` and
 `C# 13` and plan to continue doing so in the future to take advantage of new language features and
-performance improvements. For the time being, just follow these steps to try out TriSpell:
+performance improvements. For now, just follow these steps to try out TriSpell:
 
 0. Make sure you have `.NET 9` or a later version installed on your machine.
 
@@ -77,8 +75,8 @@ see what I can do.
 ## Acknowledgements
 
 I was originally inspired to create TriSpell after watching
-[this video](https://www.youtube.com/watch?v=Cu7Tl7FGigQ) by
-[Creel](https://www.youtube.com/@WhatsACreel), which features some nice animations and
+[this video](https://www.youtube.com/watch?v=Cu7Tl7FGigQ)
+by [Creel](https://www.youtube.com/@WhatsACreel), which features some nice animations and
 explanations of the algorithms. I can highly recommend the video and the channel in general for
 anyone interested in low-level programming concepts.
 
@@ -93,4 +91,4 @@ The three edit distance algorithms implemented are based on the information from
 ## License
 
 TriSpell is licensed under the [MIT License](LICENSE). Feel free to experiment with the code,
-adapt it to your own preferences, and share it with others.
+adapt it to your own preferences and share it with others.
