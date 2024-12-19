@@ -12,8 +12,8 @@ could be implemented using the so-called
 Soviet mathematician Vladimir Levenshtein, who originally defined it in 1965, this metric computes
 the similarity of two sequences of characters (or "strings" in most modern programming languages):
 
-- A source string that can be thought of as a word which the user typed.
-- A target string that represents a word the user may have intended to type (but misspelled).
+* A source string that can be thought of as a word which the user typed.
+* A target string that represents a word the user may have intended to type (but misspelled).
 
 The metric itself, sometimes simply called "edit distance", is defined as the minimum number of
 single-character edits (i. e. insertions, deletions, or substitutions) required to transform the
