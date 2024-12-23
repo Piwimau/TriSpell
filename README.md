@@ -42,7 +42,7 @@ future, it is currently defined as follows:
 
 Feel free to experiment with this and customize it to your liking. 😉
 
-## Dependencies and usage
+## Dependencies And Usage
 
 TriSpell was originally developed using `.NET 8` and `C# 12`. I recently upgraded it to `.NET 9` and
 `C# 13` and plan to continue doing so in the future to take advantage of new language features and
@@ -81,7 +81,7 @@ explanations of the algorithms. I can highly recommend the video and the channel
 anyone interested in low-level programming concepts.
 
 TriSpell uses a dictionary of english words which is licensed under the
-[Unlicense](https://unlicense.org/) and can be found
+[Unlicense](https://unlicense.org) and can be found
 [here](https://github.com/dwyl/english-words).
 
 The three edit distance algorithms implemented are based on the information from
