@@ -15,7 +15,7 @@
         <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.4.0" />
+        <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.4.0" />
     </ItemGroup>
     <ItemGroup>
         <None Update="Resources\Dictionary.txt">
