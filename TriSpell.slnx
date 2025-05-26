@@ -1,0 +1,19 @@
+<Solution>
+    <Folder Name="/items/">
+        <File Path=".gitignore" />
+        <File Path="CONTRIBUTING.md" />
+        <File Path="LICENSE" />
+        <File Path="README.md" />
+    </Folder>
+    <Folder Name="/resources/">
+        <File Path="resources/Dictionary.txt" />
+        <File Path="resources/LICENSE.md" />
+        <File Path="resources/Overview.png" />
+    </Folder>
+    <Folder Name="/src/">
+        <Project Path="src/TriSpell/TriSpell.csproj" />
+    </Folder>
+    <Folder Name="/tests/">
+        <Project Path="tests/TriSpell.Tests/TriSpell.Tests.csproj" />
+    </Folder>
+</Solution>

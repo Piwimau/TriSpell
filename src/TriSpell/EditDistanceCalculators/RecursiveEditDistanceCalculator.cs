@@ -1,34 +1,28 @@
 ﻿using System;
 
-namespace TriSpell.Source.DistanceCalculators;
+namespace TriSpell.EditDistanceCalculators;
 
 /// <summary>
-/// Represents a naive, recursive implementation of an <see cref="IDistanceCalculator"/>.
+/// Represents a naive, recursive implementation of an <see cref="IEditDistanceCalculator"/>.
 /// </summary>
 /// <remarks>
 /// This implementation is based on the original mathematical definition by Vladimir Levenshtein
 /// from 1965. Although the algorithm is relatively straightforward and easy to understand,
 /// it performs rather poorly (especially on larger inputs), as a lot of the edit distances between
-/// the prefixes of the strings are redundantly calculated.
+/// the prefixes of the strings are calculated redundantly.
 /// See <see href="https://en.wikipedia.org/wiki/Levenshtein_distance">this article</see> for more
 /// information.
-/// <para/>
-/// Note that this class is implemented as a singleton, as it does not feature any meaningful state
-/// that would justify having more than one instance at runtime.
 /// </remarks>
-internal sealed class RecursiveCalculator : IDistanceCalculator {
+public sealed class RecursiveEditDistanceCalculator : IEditDistanceCalculator {
 
-    /// <summary>Gets the instance of this <see cref="RecursiveCalculator"/>.</summary>
-    public static RecursiveCalculator Instance { get; } = new();
+    /// <inheritdoc/>
+    public string Description => "Recursive (Slow)";
 
-    /// <summary>Initializes a new <see cref="RecursiveCalculator"/>.</summary>
-    /// <remarks>
-    /// Note that this constructor is marked <see langword="private"/>,
-    /// as <see cref="RecursiveCalculator"/> is implemented as a singleton.
-    /// </remarks>
-    private RecursiveCalculator() { }
+    /// <summary>Initializes a new <see cref="RecursiveEditDistanceCalculator"/>.</summary>
+    public RecursiveEditDistanceCalculator() { }
 
-    public int Distance(ReadOnlySpan<char> source, ReadOnlySpan<char> target) {
+    /// <inheritdoc/>
+    public int EditDistance(ReadOnlySpan<char> source, ReadOnlySpan<char> target) {
         // If either of the strings is empty, the other can only be transformed into the same form
         // by inserting or deleting all characters.
         if (source.IsEmpty) {
@@ -40,13 +34,13 @@ internal sealed class RecursiveCalculator : IDistanceCalculator {
         // First characters of source and target match, so the edit distance only depends on the
         // remaining characters.
         if (source[0] == target[0]) {
-            return Distance(source[1..], target[1..]);
+            return EditDistance(source[1..], target[1..]);
         }
         // By now we know that at least the first character is different and we can calculate
         // the edit distance by trying out all three possible actions.
-        int insertion = Distance(source, target[1..]);
-        int deletion = Distance(source[1..], target);
-        int substitution = Distance(source[1..], target[1..]);
+        int insertion = EditDistance(source, target[1..]);
+        int deletion = EditDistance(source[1..], target);
+        int substitution = EditDistance(source[1..], target[1..]);
         return 1 + Math.Min(Math.Min(insertion, deletion), substitution);
     }
 
