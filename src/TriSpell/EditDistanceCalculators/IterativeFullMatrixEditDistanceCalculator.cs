@@ -37,7 +37,7 @@ public sealed class IterativeFullMatrixEditDistanceCalculator : IEditDistanceCal
         // one-dimensional buffer for improved locality and performance. This also means that we
         // have to do indexing on our own, therefore the edit distance at (i, j) is found at
         // distances[(i * columns) + j].
-        Span<int> distances = size <= MaxStackAllocLimit ? stackalloc int[size] : new int[size];
+        Span<int> distances = (size <= MaxStackAllocLimit) ? stackalloc int[size] : new int[size];
         distances[0] = 0;
         // Source prefixes can only be transformed into an empty string by deleting all characters.
         for (int i = 1; i < rows; i++) {
@@ -49,18 +49,18 @@ public sealed class IterativeFullMatrixEditDistanceCalculator : IEditDistanceCal
         }
         for (int i = 1; i < rows; i++) {
             for (int j = 1; j < columns; j++) {
-                int insertion = distances[i * columns + (j - 1)] + 1;
-                int deletion = distances[(i - 1) * columns + j] + 1;
+                int insertion = distances[(i * columns) + (j - 1)] + 1;
+                int deletion = distances[((i - 1) * columns) + j] + 1;
                 // If the characters match, there is no additional cost for substitution.
-                int substitution = distances[(i - 1) * columns + (j - 1)]
-                    + (source[i - 1] == target[j - 1] ? 0 : 1);
-                distances[i * columns + j] = Math.Min(
+                int substitution = distances[((i - 1) * columns) + (j - 1)]
+                    + ((source[i - 1] == target[j - 1]) ? 0 : 1);
+                distances[(i * columns) + j] = Math.Min(
                     Math.Min(insertion, deletion),
                     substitution
                 );
             }
         }
-        return distances[(rows - 1) * columns + (columns - 1)];
+        return distances[((rows - 1) * columns) + (columns - 1)];
     }
 
 }

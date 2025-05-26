@@ -29,10 +29,10 @@ public sealed class IterativeOptimizedMatrixEditDistanceCalculator : IEditDistan
     /// <inheritdoc/>
     public int EditDistance(ReadOnlySpan<char> source, ReadOnlySpan<char> target) {
         int size = target.Length + 1;
-        Span<int> previousDistances = size <= MaxStackAllocLimit
+        Span<int> previousDistances = (size <= MaxStackAllocLimit)
             ? stackalloc int[size]
             : new int[size];
-        Span<int> currentDistances = size <= MaxStackAllocLimit
+        Span<int> currentDistances = (size <= MaxStackAllocLimit)
             ? stackalloc int[size]
             : new int[size];
         // Empty source prefix can only be transformed into target by inserting all characters.
@@ -44,7 +44,7 @@ public sealed class IterativeOptimizedMatrixEditDistanceCalculator : IEditDistan
             for (int j = 0; j < target.Length; j++) {
                 int insertion = currentDistances[j] + 1;
                 int deletion = previousDistances[j + 1] + 1;
-                int substitution = previousDistances[j] + (source[i] == target[j] ? 0 : 1);
+                int substitution = previousDistances[j] + ((source[i] == target[j]) ? 0 : 1);
                 currentDistances[j + 1] = Math.Min(Math.Min(insertion, deletion), substitution);
             }
             // Swap the rows for the next iteration. Sadly, we can't make use of the new swap using
