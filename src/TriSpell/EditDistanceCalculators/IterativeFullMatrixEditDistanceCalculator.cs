@@ -11,8 +11,8 @@ namespace TriSpell.EditDistanceCalculators;
 /// <see cref="RecursiveEditDistanceCalculator"/>, it avoids redundant calculations by storing the
 /// edit distances between all prefixes of the source and target string in a two-dimensional matrix.
 /// The final value calculated in the lower right-hand corner is the actual edit distance between
-/// the full strings.
-/// See <see href="https://en.wikipedia.org/wiki/Levenshtein_distance">this article</see> for more
+/// the full strings. See
+/// <see href="https://en.wikipedia.org/wiki/Levenshtein_distance">this article</see> for more
 /// information.
 /// </remarks>
 public sealed class IterativeFullMatrixEditDistanceCalculator : IEditDistanceCalculator {
@@ -35,7 +35,7 @@ public sealed class IterativeFullMatrixEditDistanceCalculator : IEditDistanceCal
         int size = rows * columns;
         // The matrix of edit distances is conceptually two-dimensional, but we use a
         // one-dimensional buffer for improved locality and performance. This also means that we
-        // have to do indexing on our own, therefore the edit distance at (i, j) is found at
+        // have to do the indexing on our own. The edit distance at position (i, j) is found at
         // distances[(i * columns) + j].
         Span<int> distances = (size <= MaxStackAllocLimit) ? stackalloc int[size] : new int[size];
         distances[0] = 0;

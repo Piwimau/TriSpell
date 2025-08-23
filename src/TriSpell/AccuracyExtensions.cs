@@ -2,7 +2,7 @@
 
 namespace TriSpell;
 
-/// <summary>Provides useful extensions for the <see cref="Accuracy"/> enumeration.</summary>
+/// <summary>Represents a class providing useful extensions for an <see cref="Accuracy"/>.</summary>
 public static class AccuracyExtensions {
 
     /// <summary>Returns a short description of this <see cref="Accuracy"/>.</summary>

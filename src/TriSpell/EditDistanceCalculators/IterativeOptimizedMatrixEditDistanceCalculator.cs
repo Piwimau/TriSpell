@@ -47,9 +47,6 @@ public sealed class IterativeOptimizedMatrixEditDistanceCalculator : IEditDistan
                 int substitution = previousDistances[j] + ((source[i] == target[j]) ? 0 : 1);
                 currentDistances[j + 1] = Math.Min(Math.Min(insertion, deletion), substitution);
             }
-            // Swap the rows for the next iteration. Sadly, we can't make use of the new swap using
-            // tuples syntax (i. e., `(a, b) = (b, a)`), since a span may not be used as a type
-            // argument.
             Span<int> temp = previousDistances;
             previousDistances = currentDistances;
             currentDistances = temp;

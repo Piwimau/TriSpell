@@ -5,8 +5,8 @@ namespace TriSpell.EditDistanceCalculators;
 /// <summary>Represents a calculator for determining the edit distance of two strings.</summary>
 /// <remarks>
 /// The edit distance, also known as "Levenshtein distance" after Soviet mathematician Vladimir
-/// Levenshtein, is a measure of the similarity between two strings that may be used for basic
-/// spell checking. More specifically, it is defined as the minimum number of single character edits
+/// Levenshtein, is a measure of the similarity between two strings that may be used for basic spell
+/// checking. More specifically, it is defined as the minimum number of single character edits
 /// (i.e., insertions, deletions and substitutions) required to transform a source into a target
 /// string. See <see href="https://en.wikipedia.org/wiki/Levenshtein_distance">this article</see>
 /// for more information.

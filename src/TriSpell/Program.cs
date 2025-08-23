@@ -76,11 +76,11 @@ internal sealed class Program {
         Console.ForegroundColor = oldForegroundColor;
     }
 
-    /// <summary>Shows the main menu of the console application.</summary>
+    /// <summary>Shows the main menu of the application.</summary>
     /// <param name="editDistanceCalculator">
     /// The current <see cref="IEditDistanceCalculator"/>.
     /// </param>
-    /// <param name="accuracy">The current <see cref="Accuracy"/>.</param>
+    /// <param name="accuracy">The current <see cref="Accuracy"/> level.</param>
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="editDistanceCalculator"/> is <see langword="null"/>.
     /// </exception>
