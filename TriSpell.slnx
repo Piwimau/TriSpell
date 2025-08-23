@@ -1,5 +1,6 @@
 <Solution>
     <Folder Name="/items/">
+        <File Path=".editorconfig" />
         <File Path=".gitignore" />
         <File Path="CONTRIBUTING.md" />
         <File Path="LICENSE" />
