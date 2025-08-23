@@ -112,7 +112,7 @@ internal sealed class Program {
             ForegroundColor
         );
         WriteLineColored("Settings", ForegroundColor);
-        string accuracyDescription = accuracy.Description();
+        string accuracyDescription = accuracy.ToString();
         int tableWidth = "Algorithm | ".Length + Math.Max(
             editDistanceCalculator.Description.Length,
             accuracyDescription.Length
@@ -232,6 +232,7 @@ internal sealed class Program {
             WriteLineColored("' is spelled correctly.", ForegroundColor);
         }
         else {
+            int maxEditDistance = accuracy.MaxEditDistance(source.Length);
             IReadOnlyCollection<(string Target, int Distance)> possibleMatches = [
                 .. words
                     .Select(
@@ -240,7 +241,7 @@ internal sealed class Program {
                             EditDistance: editDistanceCalculator.EditDistance(source, target)
                         )
                     )
-                    .Where(match => match.EditDistance <= accuracy.MaxEditDistance())
+                    .Where(match => match.EditDistance <= maxEditDistance)
                     .OrderBy(match => match.EditDistance)
                     .ThenBy(match => match.Target)
             ];
@@ -263,10 +264,10 @@ internal sealed class Program {
                     int paddingLength = Math.Max(maxTargetLength, "Possible Match".Length);
                     WriteColored($"{target.PadRight(paddingLength)} | ", ForegroundColor);
                     ConsoleColor foregroundColor;
-                    if (editDistance <= Accuracy.High.MaxEditDistance()) {
+                    if (editDistance <= Accuracy.High.MaxEditDistance(source.Length)) {
                         foregroundColor = ConsoleColor.Green;
                     }
-                    else if (editDistance <= Accuracy.Medium.MaxEditDistance()) {
+                    else if (editDistance <= Accuracy.Medium.MaxEditDistance(source.Length)) {
                         foregroundColor = ConsoleColor.Yellow;
                     }
                     else {

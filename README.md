@@ -30,19 +30,11 @@ For more details on the individual algorithms see
 [this article](https://en.wikipedia.org/wiki/Levenshtein_distance), which also contains useful
 pseudocode I used as reference for the implementation.
 
-In addition to the algorithms, the user can choose from three different levels of accuracy.
-While the specific implementation (i. e., the maximum edit distance per level) may be subject to
-change in the future, it is currently defined as follows:
+In addition to the algorithms, the user can choose from three different levels of accuracy. The
+lower the accuracy, the more (possibly irrelevant) possible matches are found. The higher the
+accuracy, the less (but likely more relevant) possible matches are found.
 
-| Accuracy Level | Maximum Edit Distance |
-|----------------|-----------------------|
-| Low            | 3                     |
-| Medium         | 2                     |
-| High           | 1                     |
-
-Feel free to experiment and customize it to your preference. 😉
-
-## Dependencies And Usage
+## Dependencies and Usage
 
 TriSpell was originally developed using `.NET 8` and `C# 12`. I recently upgraded it to `.NET 9` and
 `C# 13` and plan to continue doing so in the future to take advantage of new language features and
