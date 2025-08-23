@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,15 +22,23 @@ internal sealed class Program {
     /// <summary>Default accent color of the console output.</summary>
     private const ConsoleColor AccentColor = ConsoleColor.DarkCyan;
 
-    /// <summary>Asynchronously reads the dictionary file.</summary>
-    /// <returns>A <see cref="HashSet{T}"/> representing the set of known words.</returns>
-    private static async Task<HashSet<string>> ReadDictionaryAsync() {
-        string path = Path.Combine(AppContext.BaseDirectory, "Resources", "Dictionary.txt");
+    /// <summary>Path to the dictionary file containing a set of known words.</summary>
+    private static readonly string DictionaryPath = Path.Combine(
+        AppContext.BaseDirectory,
+        "Resources",
+        "Dictionary.txt"
+    );
+
+    /// <summary>
+    /// Asynchronously reads the dictionary file and returns a set of known words.
+    /// </summary>
+    /// <returns>A set of known words.</returns>
+    private static async Task<FrozenSet<string>> ReadDictionaryAsync() {
         HashSet<string> words = [];
-        await foreach (string word in File.ReadLinesAsync(path)) {
+        await foreach (string word in File.ReadLinesAsync(DictionaryPath)) {
             words.Add(word);
         }
-        return words;
+        return words.ToFrozenSet();
     }
 
     /// <summary>
@@ -136,6 +146,7 @@ internal sealed class Program {
     /// <typeparam name="TOption">The type of the options in the list.</typeparam>
     /// <param name="prompt">The message displayed to the user to describe the context.</param>
     /// <param name="options">A read-only list of options from which the user can select.</param>
+    /// <param name="defaultOption">The option selected by default.</param>
     /// <param name="optionDescription">
     /// A function that provides a string description for each option.
     /// </param>
@@ -149,33 +160,42 @@ internal sealed class Program {
     /// Thrown when <paramref name="prompt"/>, <paramref name="options"/> or
     /// <paramref name="optionDescription"/> is <see langword="null"/>.
     /// </exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="defaultOption"/> is not one of the available options.
+    /// </exception>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when <paramref name="options"/> does not contain at least two options.
     /// </exception>
     private static bool TrySelectOption<TOption>(
         string prompt,
         IReadOnlyList<TOption> options,
+        TOption defaultOption,
         Func<TOption, string> optionDescription,
         [NotNullWhen(true)] out TOption? selectedOption
     ) where TOption : notnull {
         Guard.IsNotNull(prompt);
         Guard.IsNotNull(options);
-        Guard.IsGreaterThan(options.Count, 1);
+        Guard.IsTrue(
+            options.Contains(defaultOption),
+            nameof(defaultOption),
+            "The default option must be one of the available options."
+        );
+        Guard.HasSizeGreaterThanOrEqualTo(options, 1);
         Guard.IsNotNull(optionDescription);
         Console.Clear();
-        int selectedIndex = 0;
+        int selectedIndex = options.Index().First(pair => pair.Item.Equals(defaultOption)).Index;
         while (true) {
             Console.SetCursorPosition(0, 0);
             WriteLineColored($"{prompt}\n", ForegroundColor);
             for (int i = 0; i < options.Count; i++) {
-                WriteColored("[", ForegroundColor);
+                WriteColored("(", ForegroundColor);
                 if (i == selectedIndex) {
                     WriteColored("*", AccentColor);
                 }
                 else {
                     WriteColored(" ", ForegroundColor);
                 }
-                WriteColored("] ", ForegroundColor);
+                WriteColored(") ", ForegroundColor);
                 WriteLineColored(optionDescription(options[i]), ForegroundColor);
             }
             WriteColored("\n[ESC]   ", AccentColor);
@@ -224,10 +244,12 @@ internal sealed class Program {
         WriteLineColored("\nEnter a word to spellcheck.\n", ForegroundColor);
         WriteColored("> ", AccentColor);
         Console.CursorVisible = true;
-        string source = Console.ReadLine() ?? string.Empty;
+        string word = Console.ReadLine() ?? string.Empty;
+        // The dictionary only contains lowercase words, so we convert the input to lowercase.
+        string source = word.ToLower(CultureInfo.CurrentCulture);
         Console.CursorVisible = false;
         WriteColored("\nThe word '", ForegroundColor);
-        WriteColored(source, AccentColor);
+        WriteColored(word, AccentColor);
         if (words.Contains(source)) {
             WriteLineColored("' is spelled correctly.", ForegroundColor);
         }
@@ -250,15 +272,21 @@ internal sealed class Program {
                     "' might be misspelled (no possible matches were found).",
                     ForegroundColor
                 );
+                if (accuracy > Accuracy.Low) {
+                    WriteLineColored(
+                        "Try selecting a lower accuracy to find more possible matches.",
+                        ForegroundColor
+                    );
+                }
             }
             else {
                 WriteLineColored(
-                    "' might be misspelled, the following possible matches were found.\n",
+                    "' might be misspelled, the following possible matches were found.",
                     ForegroundColor
                 );
                 int maxTargetLength = possibleMatches.Max(match => match.Target.Length);
                 string header = "Possible Match".PadRight(maxTargetLength) + " | Edit Distance";
-                WriteLineColored(header, ForegroundColor);
+                WriteLineColored($"\n{header}", ForegroundColor);
                 WriteLineColored(new string('-', header.Length), ForegroundColor);
                 foreach ((string target, int editDistance) in possibleMatches) {
                     int paddingLength = Math.Max(maxTargetLength, "Possible Match".Length);
@@ -308,6 +336,7 @@ internal sealed class Program {
                     bool selectionConfirmed = TrySelectOption(
                         "Select one of the following algorithms for spell checking.",
                         editDistanceCalculators,
+                        editDistanceCalculator,
                         editDistanceCalculator => editDistanceCalculator.Description,
                         out IEditDistanceCalculator? selectedEditDistanceCalculator
                     );
@@ -320,7 +349,8 @@ internal sealed class Program {
                     bool selectionConfirmed = TrySelectOption(
                         "Select one of the following accuracies for spell checking.",
                         accuracies,
-                        accuracy => accuracy.Description(),
+                        accuracy,
+                        accuracy => accuracy.ToString(),
                         out Accuracy selectedAccuracy
                     );
                     if (selectionConfirmed) {
