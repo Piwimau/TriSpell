@@ -29,8 +29,11 @@ public sealed class IterativeFullMatrixEditDistanceCalculatorTests {
         string target,
         int expectedEditDistance
     ) {
-        IterativeFullMatrixEditDistanceCalculator editDistanceCalculator = new();
-        Assert.Equal(expectedEditDistance, editDistanceCalculator.EditDistance(source, target));
+        IterativeFullMatrixEditDistanceCalculator calculator = new();
+        Assert.Equal(
+            expectedEditDistance,
+            calculator.EditDistance(source, target)
+        );
     }
 
 }

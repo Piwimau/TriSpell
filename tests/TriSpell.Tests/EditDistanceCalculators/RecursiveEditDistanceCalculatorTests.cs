@@ -29,8 +29,11 @@ public sealed class RecursiveEditDistanceCalculatorTests {
         string target,
         int expectedEditDistance
     ) {
-        RecursiveEditDistanceCalculator editDistanceCalculator = new();
-        Assert.Equal(expectedEditDistance, editDistanceCalculator.EditDistance(source, target));
+        RecursiveEditDistanceCalculator calculator = new();
+        Assert.Equal(
+            expectedEditDistance,
+            calculator.EditDistance(source, target)
+        );
     }
 
 }

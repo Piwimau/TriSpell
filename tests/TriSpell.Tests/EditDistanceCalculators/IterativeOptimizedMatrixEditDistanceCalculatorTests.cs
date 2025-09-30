@@ -29,8 +29,11 @@ public sealed class IterativeOptimizedMatrixEditDistanceCalculatorTests {
         string target,
         int expectedEditDistance
     ) {
-        IterativeOptimizedMatrixEditDistanceCalculator editDistanceCalculator = new();
-        Assert.Equal(expectedEditDistance, editDistanceCalculator.EditDistance(source, target));
+        IterativeOptimizedMatrixEditDistanceCalculator calculator = new();
+        Assert.Equal(
+            expectedEditDistance,
+            calculator.EditDistance(source, target)
+        );
     }
 
 }
