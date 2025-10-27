@@ -27,13 +27,10 @@ public sealed class IterativeFullMatrixEditDistanceCalculatorTests {
     public void EditDistance_ReturnsExpectedResult_WhenGivenVariousInputs(
         string source,
         string target,
-        int expectedEditDistance
+        int expectedDistance
     ) {
         IterativeFullMatrixEditDistanceCalculator calculator = new();
-        Assert.Equal(
-            expectedEditDistance,
-            calculator.EditDistance(source, target)
-        );
+        Assert.Equal(expectedDistance, calculator.EditDistance(source, target));
     }
 
 }

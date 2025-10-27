@@ -301,20 +301,17 @@ internal sealed class Program {
             WriteLineColored("' is spelled correctly.", ForegroundColor);
         }
         else {
-            int maxEditDistance = accuracy.MaxEditDistance(source.Length);
+            int maxDistance = accuracy.MaxEditDistance(source.Length);
             IReadOnlyCollection<(string Target, int Distance)> possibleMatches = [
                 .. words
                     .Select(
                         target => (
                             Target: target,
-                            EditDistance: calculator.EditDistance(
-                                source,
-                                target
-                            )
+                            Distance: calculator.EditDistance(source, target)
                         )
                     )
-                    .Where(match => match.EditDistance <= maxEditDistance)
-                    .OrderBy(match => match.EditDistance)
+                    .Where(match => match.Distance <= maxDistance)
+                    .OrderBy(match => match.Distance)
                     .ThenBy(match => match.Target)
             ];
             if (possibleMatches.Count == 0) {
@@ -346,7 +343,7 @@ internal sealed class Program {
                     new string('-', header.Length),
                     ForegroundColor
                 );
-                foreach ((string target, int editDistance) in possibleMatches) {
+                foreach ((string target, int distance) in possibleMatches) {
                     int paddingLength = Math.Max(
                         maxTargetLength,
                         "Possible Match".Length
@@ -356,18 +353,16 @@ internal sealed class Program {
                         ForegroundColor
                     );
                     ConsoleColor foregroundColor;
-                    if (editDistance
-                            <= Accuracy.High.MaxEditDistance(source.Length)) {
+                    if (distance <= Accuracy.High.MaxEditDistance(source.Length)) {
                         foregroundColor = ConsoleColor.Green;
                     }
-                    else if (editDistance
-                            <= Accuracy.Medium.MaxEditDistance(source.Length)) {
+                    else if (distance <= Accuracy.Medium.MaxEditDistance(source.Length)) {
                         foregroundColor = ConsoleColor.Yellow;
                     }
                     else {
                         foregroundColor = ConsoleColor.Red;
                     }
-                    WriteLineColored($"{editDistance}", foregroundColor);
+                    WriteLineColored($"{distance}", foregroundColor);
                 }
             }
         }
