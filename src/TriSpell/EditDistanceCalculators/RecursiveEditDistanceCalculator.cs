@@ -11,18 +11,12 @@ namespace TriSpell.EditDistanceCalculators;
 /// Vladimir Levenshtein from 1965. Although the algorithm is relatively
 /// straightforward and easy to understand, it performs rather poorly
 /// (especially on larger inputs), as a lot of the edit distances between the
-/// prefixes of the strings are calculated redundantly. See <see href="https://en.wikipedia.org/wiki/Levenshtein_distance">this article</see>
-/// for more information.
+/// prefixes of the strings are redundantly calculated. See
+/// <see href="https://en.wikipedia.org/wiki/Levenshtein_distance">this article
+/// </see> for more information.
 /// </remarks>
-public sealed class RecursiveEditDistanceCalculator : IEditDistanceCalculator {
-
-    /// <inheritdoc/>
-    public string Description => "Recursive (Slow)";
-
-    /// <summary>
-    /// Initializes a new <see cref="RecursiveEditDistanceCalculator"/>.
-    /// </summary>
-    public RecursiveEditDistanceCalculator() { }
+internal sealed class RecursiveEditDistanceCalculator
+    : IEditDistanceCalculator {
 
     /// <inheritdoc/>
     public int EditDistance(
@@ -37,7 +31,7 @@ public sealed class RecursiveEditDistanceCalculator : IEditDistanceCalculator {
         if (target.IsEmpty) {
             return source.Length;
         }
-        // First characters of source and target match, so the edit distance
+        // The first characters of source and target match, so the edit distance
         // only depends on the remaining characters.
         if (source[0] == target[0]) {
             return EditDistance(source[1..], target[1..]);

@@ -7,11 +7,11 @@ TriSpell is a small and simple console application for basic spell checking.
 ## Features
 
 As a fun little side project of mine, TriSpell was intended to explore how basic
-spell checking could be implemented using the so-called
-[Levenshtein distance](https://en.wikipedia.org/wiki/Levenshtein_distance)
-metric. Named after the Soviet mathematician Vladimir Levenshtein, who
-originally defined it in 1965, this metric computes the similarity of two
-sequences of characters ("strings" in most modern programming languages):
+spell checking could be implemented using the so-called [Levenshtein
+distance](https://en.wikipedia.org/wiki/Levenshtein_distance) metric. Named
+after the Soviet mathematician Vladimir Levenshtein, who originally defined it
+in 1965, this metric computes the similarity of two sequences of characters
+("strings" in most modern programming languages):
 
 * A source string that can be thought of as a word which the user typed.
 * A target string that represents a word the user may have intended to type (but
@@ -30,8 +30,8 @@ from:
 | Iterative Full Matrix      | +          | This slightly more advanced implementation employs techniques of dynamic programming. It uses a two-dimensional matrix to cache the edit distances between all prefixes of the source and target strings, thus avoiding unnecessary calculations.                                                                                             |
 | Iterative Optimized Matrix | ++         | Even more advanced implementation that makes use of an important optimization: For calculating the edit distance at a certain position, only the previous and current row of edit distances are ever needed. This usually reduces the memory footprint and runtime even further in comparison to the full matrix algorithm.                   |
 
-For more details on the individual algorithms see
-[this article](https://en.wikipedia.org/wiki/Levenshtein_distance), which also
+For more details on the individual algorithms see [this
+article](https://en.wikipedia.org/wiki/Levenshtein_distance), which also
 contains useful pseudocode I used as reference for the implementation.
 
 In addition to the algorithms, the user can choose from three different levels
@@ -42,22 +42,22 @@ possible matches are found.
 ## Dependencies and Usage
 
 TriSpell was originally developed using `.NET 8` and `C# 12`. I recently
-upgraded it to `.NET 9` and `C# 13` and plan to continue doing so in the future
+upgraded it to `.NET 10` and `C# 14` and plan to continue doing so in the future
 to take advantage of new language features and performance improvements. For
 now, simply follow these steps to try out TriSpell:
 
-1. Make sure you have `.NET 9` or a later version installed on your machine.
+1. Make sure you have `.NET 10` or a later version installed on your machine.
 
 2. Clone the repository (or download the source code) to a directory of your
    choice.
-   
+
    ```shell
    git clone https://github.com/Piwimau/TriSpell.git ./TriSpell
    cd ./TriSpell
    ```
 
 3. Run the application in release mode to achieve the best performance.
-   
+
    ```shell
    dotnet run --configuration Release --project src/TriSpell
    ```
@@ -73,8 +73,8 @@ feel free to open an issue and I'll see what I can do.
 
 ## Acknowledgements
 
-I was originally inspired to create TriSpell after watching
-[this video](https://www.youtube.com/watch?v=Cu7Tl7FGigQ) by
+I was originally inspired to create TriSpell after watching [this
+video](https://www.youtube.com/watch?v=Cu7Tl7FGigQ) by
 [Creel](https://www.youtube.com/@WhatsACreel), which features some nice
 animations and explanations of the algorithms. I can highly recommend the video
 and the channel in general for anyone interested in low-level programming

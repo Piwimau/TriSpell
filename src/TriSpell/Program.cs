@@ -5,25 +5,25 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using TriSpell.EditDistanceCalculators;
+using TriSpell.Extensions;
 
 namespace TriSpell;
 
 internal sealed class Program {
 
-    /// <summary>Default foreground color of the console output.</summary>
+    /// <summary>The default foreground color of the console output.</summary>
     private const ConsoleColor ForegroundColor = ConsoleColor.White;
 
-    /// <summary>Default background color of the console output.</summary>
+    /// <summary>The default background color of the console output.</summary>
     private const ConsoleColor BackgroundColor = ConsoleColor.Black;
 
-    /// <summary>Default accent color of the console output.</summary>
+    /// <summary>The default accent color of the console output.</summary>
     private const ConsoleColor AccentColor = ConsoleColor.DarkCyan;
 
     /// <summary>
-    /// Path to the dictionary file containing a set of known words.
+    /// The path to the dictionary file containing a set of known words.
     /// </summary>
     private static readonly string DictionaryPath = Path.Combine(
         AppContext.BaseDirectory,
@@ -31,78 +31,7 @@ internal sealed class Program {
         "Dictionary.txt"
     );
 
-    /// <summary>
-    /// Asynchronously reads the dictionary file and returns a set of known
-    /// words.
-    /// </summary>
-    /// <returns>A set of known words.</returns>
-    private static async Task<FrozenSet<string>> ReadDictionaryAsync() {
-        HashSet<string> words = [];
-        await foreach (string word in File.ReadLinesAsync(DictionaryPath)) {
-            words.Add(word);
-        }
-        return words.ToFrozenSet();
-    }
-
-    /// <summary>
-    /// Writes a specified text with a custom foreground color to the standard
-    /// output stream.
-    /// </summary>
-    /// <remarks>
-    /// The previous foreground color of the <see cref="Console"/> is saved and
-    /// restored using the <see cref="Console.ForegroundColor"/> property before
-    /// this call returns.
-    /// </remarks>
-    /// <param name="text">
-    /// The text to write to the standard output stream.
-    /// </param>
-    /// <param name="foregroundColor">
-    /// The custom <see cref="ConsoleColor"/> to use as the foreground color.
-    /// </param>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown when <paramref name="text"/> is <see langword="null"/>.
-    /// </exception>
-    private static void WriteColored(
-        string text,
-        ConsoleColor foregroundColor
-    ) {
-        Guard.IsNotNull(text);
-        ConsoleColor oldForegroundColor = Console.ForegroundColor;
-        Console.ForegroundColor = foregroundColor;
-        Console.Write(text);
-        Console.ForegroundColor = oldForegroundColor;
-    }
-
-    /// <summary>
-    /// Writes a specified text with a custom foreground color, followed by the
-    /// current line terminator, to the standard output stream.
-    /// </summary>
-    /// <remarks>
-    /// The previous foreground color of the <see cref="Console"/> is saved and
-    /// restored using the <see cref="Console.ForegroundColor"/> property before
-    /// this call returns.
-    /// </remarks>
-    /// <param name="text">
-    /// The text to write to the standard output stream.
-    /// </param>
-    /// <param name="foregroundColor">
-    /// The custom <see cref="ConsoleColor"/> to use as the foreground color.
-    /// </param>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown when <paramref name="text"/> is <see langword="null"/>.
-    /// </exception>
-    private static void WriteLineColored(
-        string text,
-        ConsoleColor foregroundColor
-    ) {
-        Guard.IsNotNull(text);
-        ConsoleColor oldForegroundColor = Console.ForegroundColor;
-        Console.ForegroundColor = foregroundColor;
-        Console.WriteLine(text);
-        Console.ForegroundColor = oldForegroundColor;
-    }
-
-    /// <summary>Shows the main menu of the application.</summary>
+    /// <summary>Draws the main menu of the application.</summary>
     /// <param name="calculator">
     /// The current <see cref="IEditDistanceCalculator"/>.
     /// </param>
@@ -110,57 +39,57 @@ internal sealed class Program {
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="calculator"/> is <see langword="null"/>.
     /// </exception>
-    private static void ShowMainMenu(
+    private static void DrawMainMenu(
         IEditDistanceCalculator calculator,
         Accuracy accuracy
     ) {
         Guard.IsNotNull(calculator);
         Console.Clear();
-        WriteLineColored(
-           """
+        Console.WriteLineColored(
+            """
             ▄▄▄█████▓ ██▀███   ██▓  ██████  ██▓███  ▓█████  ██▓     ██▓    
-            ▓  ██▒ ▓▒▓██ ▒ ██▒▓██▒▒██    ▒ ▓██░  ██▒▓█   ▀ ▓██▒    ▓██▒    
-            ▒ ▓██░ ▒░▓██ ░▄█ ▒▒██▒░ ▓██▄   ▓██░ ██▓▒▒███   ▒██░    ▒██░    
-            ░ ▓██▓ ░ ▒██▀▀█▄  ░██░  ▒   ██▒▒██▄█▓▒ ▒▒▓█  ▄ ▒██░    ▒██░    
-              ▒██▒ ░ ░██▓ ▒██▒░██░▒██████▒▒▒██▒ ░  ░░▒████▒░██████▒░██████▒
-              ▒ ░░   ░ ▒▓ ░▒▓░░▓  ▒ ▒▓▒ ▒ ░▒▓▒░ ░  ░░░ ▒░ ░░ ▒░▓  ░░ ▒░▓  ░
-                ░      ░▒ ░ ▒░ ▒ ░░ ░▒  ░ ░░▒ ░      ░ ░  ░░ ░ ▒  ░░ ░ ▒  ░
-              ░        ░░   ░  ▒ ░░  ░  ░  ░░          ░     ░ ░     ░ ░   
-                        ░      ░        ░              ░  ░    ░  ░    ░  ░
-
+             ▓  ██▒ ▓▒▓██ ▒ ██▒▓██▒▒██    ▒ ▓██░  ██▒▓█   ▀ ▓██▒    ▓██▒    
+             ▒ ▓██░ ▒░▓██ ░▄█ ▒▒██▒░ ▓██▄   ▓██░ ██▓▒▒███   ▒██░    ▒██░    
+             ░ ▓██▓ ░ ▒██▀▀█▄  ░██░  ▒   ██▒▒██▄█▓▒ ▒▒▓█  ▄ ▒██░    ▒██░    
+               ▒██▒ ░ ░██▓ ▒██▒░██░▒██████▒▒▒██▒ ░  ░░▒████▒░██████▒░██████▒
+               ▒ ░░   ░ ▒▓ ░▒▓░░▓  ▒ ▒▓▒ ▒ ░▒▓▒░ ░  ░░░ ▒░ ░░ ▒░▓  ░░ ▒░▓  ░
+                 ░      ░▒ ░ ▒░ ▒ ░░ ░▒  ░ ░░▒ ░      ░ ░  ░░ ░ ▒  ░░ ░ ▒  ░
+               ░        ░░   ░  ▒ ░░  ░  ░  ░░          ░     ░ ░     ░ ░   
+                         ░      ░        ░              ░  ░    ░  ░    ░  ░
+            
             """,
-           AccentColor
+            AccentColor
         );
-        WriteColored("Welcome to ", ForegroundColor);
-        WriteColored("TriSpell", AccentColor);
-        WriteLineColored(
-            ", a small and simple console application for basic spell "
-                + "checking.\n",
+        Console.WriteColored("Welcome to ", ForegroundColor);
+        Console.WriteColored("TriSpell", AccentColor);
+        Console.WriteLineColored(
+            ", a small and simple console application for spell checking.",
             ForegroundColor
         );
-        WriteLineColored("Settings", ForegroundColor);
-        string accuracyDescription = accuracy.ToString();
+        Console.WriteLine();
+        Console.WriteLineColored("Settings", ForegroundColor);
         int tableWidth = "Algorithm | ".Length + Math.Max(
             calculator.Description.Length,
-            accuracyDescription.Length
+            accuracy.Description.Length
         );
-        WriteLineColored(new string('-', tableWidth), ForegroundColor);
-        WriteLineColored(
+        Console.WriteLineColored(new string('-', tableWidth), ForegroundColor);
+        Console.WriteLineColored(
             $"Algorithm | {calculator.Description}",
             ForegroundColor
         );
-        WriteLineColored(
-            $"Accuracy  | {accuracyDescription}\n",
+        Console.WriteLineColored(
+            $"Accuracy  | {accuracy.Description}",
             ForegroundColor
         );
-        WriteColored("[ESC] ", AccentColor);
-        WriteLineColored("Exit Program", ForegroundColor);
-        WriteColored("[1]   ", AccentColor);
-        WriteLineColored("Select Algorithm", ForegroundColor);
-        WriteColored("[2]   ", AccentColor);
-        WriteLineColored("Select Accuracy", ForegroundColor);
-        WriteColored("[3]   ", AccentColor);
-        WriteLineColored("Spellcheck Word", ForegroundColor);
+        Console.WriteLine();
+        Console.WriteColored("[ESC] ", AccentColor);
+        Console.WriteLineColored("Exit Program", ForegroundColor);
+        Console.WriteColored("[1]   ", AccentColor);
+        Console.WriteLineColored("Select Algorithm", ForegroundColor);
+        Console.WriteColored("[2]   ", AccentColor);
+        Console.WriteLineColored("Select Accuracy", ForegroundColor);
+        Console.WriteColored("[3]   ", AccentColor);
+        Console.WriteLineColored("Spellcheck Word", ForegroundColor);
     }
 
     /// <summary>
@@ -171,21 +100,21 @@ internal sealed class Program {
     /// The type of the options in the list.
     /// </typeparam>
     /// <param name="prompt">
-    /// The message displayed to the user to describe the context.
+    /// The prompt displayed to the user to describe the context.
     /// </param>
     /// <param name="options">
     /// A read-only list of options from which the user can select.
     /// </param>
     /// <param name="defaultOption">The option selected by default.</param>
     /// <param name="optionDescription">
-    /// A function that provides a string description for each option.
+    /// A function that returns a short description for each option.
     /// </param>
     /// <param name="selectedOption">
-    /// The selected option if the user confirms a selection, otherwise
+    /// The selected option if the user confirms the selection, otherwise
     /// <see langword="null"/>.
     /// </param>
     /// <returns>
-    /// <see langword="true"/> if the user confirms a selection, otherwise
+    /// <see langword="true"/> if the user confirms the selection, otherwise
     /// <see langword="false"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException">
@@ -193,12 +122,11 @@ internal sealed class Program {
     /// <paramref name="optionDescription"/> is <see langword="null"/>.
     /// </exception>
     /// <exception cref="ArgumentException">
-    /// Thrown when <paramref name="defaultOption"/> is not one of the available
-    /// options.
+    /// Thrown when <paramref name="defaultOption"/> is not part of
+    /// <paramref name="options"/>.
     /// </exception>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown when <paramref name="options"/> does not contain at least two
-    /// options.
+    /// Thrown when <paramref name="options"/> contains less than two elements.
     /// </exception>
     private static bool TrySelectOption<TOption>(
         string prompt,
@@ -214,7 +142,7 @@ internal sealed class Program {
             nameof(defaultOption),
             "The default option must be one of the available options."
         );
-        Guard.HasSizeGreaterThanOrEqualTo(options, 1);
+        Guard.HasSizeGreaterThanOrEqualTo(options, 2);
         Guard.IsNotNull(optionDescription);
         Console.Clear();
         int selectedIndex = options
@@ -223,27 +151,29 @@ internal sealed class Program {
             .Index;
         while (true) {
             Console.SetCursorPosition(0, 0);
-            WriteLineColored($"{prompt}\n", ForegroundColor);
+            Console.WriteLineColored($"{prompt}", ForegroundColor);
+            Console.WriteLine();
             for (int i = 0; i < options.Count; i++) {
-                WriteColored("(", ForegroundColor);
+                Console.WriteColored("(", ForegroundColor);
                 if (i == selectedIndex) {
-                    WriteColored("*", AccentColor);
+                    Console.WriteColored("*", AccentColor);
                 }
                 else {
-                    WriteColored(" ", ForegroundColor);
+                    Console.WriteColored(" ", ForegroundColor);
                 }
-                WriteColored(") ", ForegroundColor);
-                WriteLineColored(
+                Console.WriteColored(") ", ForegroundColor);
+                Console.WriteLineColored(
                     optionDescription(options[i]),
                     ForegroundColor
                 );
             }
-            WriteColored("\n[ESC]   ", AccentColor);
-            WriteLineColored("Discard Changes", ForegroundColor);
-            WriteColored("[^][v]  ", AccentColor);
-            WriteLineColored("Change Selected Option", ForegroundColor);
-            WriteColored("[ENTER] ", AccentColor);
-            WriteLineColored("Confirm Selected Option", ForegroundColor);
+            Console.WriteLine();
+            Console.WriteColored("[ESC]   ", AccentColor);
+            Console.WriteLineColored("Discard Changes", ForegroundColor);
+            Console.WriteColored("[^][v]  ", AccentColor);
+            Console.WriteLineColored("Change Selection", ForegroundColor);
+            Console.WriteColored("[ENTER] ", AccentColor);
+            Console.WriteLineColored("Confirm Selection", ForegroundColor);
             switch (Console.ReadKey(true).Key) {
                 case ConsoleKey.Escape:
                     selectedOption = default;
@@ -265,16 +195,15 @@ internal sealed class Program {
     }
 
     /// <summary>
-    /// Spellchecks a word entered by the user against a set of known words
-    /// using the specified <see cref="IEditDistanceCalculator"/> and
-    /// <see cref="Accuracy"/>.
+    /// Spellchecks a word against a set of known words using a specified
+    /// <see cref="IEditDistanceCalculator"/> and <see cref="Accuracy"/> level.
     /// </summary>
     /// <param name="calculator">
     /// The <see cref="IEditDistanceCalculator"/> to use for spell checking.
     /// </param>
     /// <param name="words">A set of known words to check against.</param>
     /// <param name="accuracy">
-    /// The <see cref="Accuracy"/> to use for spell checking.
+    /// The <see cref="Accuracy"/> level to use for spell checking.
     /// </param>
     /// <exception cref="ArgumentNullException">
     /// Thrown when <paramref name="calculator"/> or <paramref name="words"/> is
@@ -287,22 +216,31 @@ internal sealed class Program {
     ) {
         Guard.IsNotNull(calculator);
         Guard.IsNotNull(words);
-        WriteLineColored("\nEnter a word to spellcheck.\n", ForegroundColor);
-        WriteColored("> ", AccentColor);
+        Console.WriteLine();
+        Console.WriteLineColored(
+            "Enter a word to spellcheck.",
+            ForegroundColor
+        );
+        Console.WriteLine();
+        Console.WriteColored("> ", AccentColor);
         Console.CursorVisible = true;
         string word = Console.ReadLine() ?? string.Empty;
         // The dictionary only contains lowercase words, so we convert the input
-        // to lowercase.
+        // to lowercase as well.
         string source = word.ToLower(CultureInfo.CurrentCulture);
         Console.CursorVisible = false;
-        WriteColored("\nThe word '", ForegroundColor);
-        WriteColored(word, AccentColor);
+        Console.WriteLine();
+        Console.WriteColored("The word '", ForegroundColor);
+        Console.WriteColored(word, AccentColor);
         if (words.Contains(source)) {
-            WriteLineColored("' is spelled correctly.", ForegroundColor);
+            Console.WriteLineColored(
+                "' is spelled correctly.",
+                ForegroundColor
+            );
         }
         else {
             int maxDistance = accuracy.MaxEditDistance(source.Length);
-            IReadOnlyCollection<(string Target, int Distance)> possibleMatches = [
+            IReadOnlyCollection<(string Target, int Distance)> matches = [
                 .. words
                     .Select(
                         target => (
@@ -314,13 +252,13 @@ internal sealed class Program {
                     .OrderBy(match => match.Distance)
                     .ThenBy(match => match.Target)
             ];
-            if (possibleMatches.Count == 0) {
-                WriteLineColored(
+            if (matches.Count == 0) {
+                Console.WriteLineColored(
                     "' might be misspelled (no possible matches were found).",
                     ForegroundColor
                 );
                 if (accuracy > Accuracy.Low) {
-                    WriteLineColored(
+                    Console.WriteLineColored(
                         "Try selecting a lower accuracy to find more possible "
                             + "matches.",
                         ForegroundColor
@@ -328,27 +266,26 @@ internal sealed class Program {
                 }
             }
             else {
-                WriteLineColored(
+                Console.WriteLineColored(
                     "' might be misspelled, the following possible matches "
                         + "were found.",
                     ForegroundColor
                 );
-                int maxTargetLength = possibleMatches.Max(
-                    match => match.Target.Length
-                );
+                int maxTargetLength = matches.Max(match => match.Target.Length);
                 string header = "Possible Match".PadRight(maxTargetLength)
                     + " | Edit Distance";
-                WriteLineColored($"\n{header}", ForegroundColor);
-                WriteLineColored(
+                Console.WriteLine();
+                Console.WriteLineColored(header, ForegroundColor);
+                Console.WriteLineColored(
                     new string('-', header.Length),
                     ForegroundColor
                 );
-                foreach ((string target, int distance) in possibleMatches) {
-                    int paddingLength = Math.Max(
-                        maxTargetLength,
-                        "Possible Match".Length
-                    );
-                    WriteColored(
+                int paddingLength = Math.Max(
+                    maxTargetLength,
+                    "Possible Match".Length
+                );
+                foreach ((string target, int distance) in matches) {
+                    Console.WriteColored(
                         $"{target.PadRight(paddingLength)} | ",
                         ForegroundColor
                     );
@@ -362,18 +299,20 @@ internal sealed class Program {
                     else {
                         foregroundColor = ConsoleColor.Red;
                     }
-                    WriteLineColored($"{distance}", foregroundColor);
+                    Console.WriteLineColored($"{distance}", foregroundColor);
                 }
             }
         }
-        WriteLineColored("\nPress any key to continue.", ForegroundColor);
+        Console.WriteLine();
+        Console.WriteLineColored("Press any key to continue.", ForegroundColor);
         Console.ReadKey(true);
     }
 
-    private static async Task Main() {
-        IReadOnlySet<string> words = await ReadDictionaryAsync();
-        ConsoleColor oldForegroundColor = Console.ForegroundColor;
-        ConsoleColor oldBackgroundColor = Console.BackgroundColor;
+    private static void Main() {
+        IReadOnlySet<string> words = File.ReadLines(DictionaryPath)
+            .ToFrozenSet();
+        ConsoleColor previousForegroundColor = Console.ForegroundColor;
+        ConsoleColor previousBackgroundColor = Console.BackgroundColor;
         Console.CursorVisible = false;
         Console.ForegroundColor = ForegroundColor;
         Console.BackgroundColor = BackgroundColor;
@@ -390,12 +329,12 @@ internal sealed class Program {
         ];
         Accuracy accuracy = accuracies[1];
         while (true) {
-            ShowMainMenu(calculator, accuracy);
+            DrawMainMenu(calculator, accuracy);
             switch (Console.ReadKey(true).Key) {
                 case ConsoleKey.Escape:
                     Console.CursorVisible = true;
-                    Console.ForegroundColor = oldForegroundColor;
-                    Console.BackgroundColor = oldBackgroundColor;
+                    Console.ForegroundColor = previousForegroundColor;
+                    Console.BackgroundColor = previousBackgroundColor;
                     return;
                 case ConsoleKey.D1: {
                     bool selectionConfirmed = TrySelectOption(
@@ -417,7 +356,7 @@ internal sealed class Program {
                             + "checking.",
                         accuracies,
                         accuracy,
-                        accuracy => accuracy.ToString(),
+                        accuracy => accuracy.Description,
                         out Accuracy selectedAccuracy
                     );
                     if (selectionConfirmed) {

@@ -1,7 +1,7 @@
 ﻿namespace TriSpell;
 
 /// <summary>Represents a level of accuracy used for spell checking.</summary>
-public enum Accuracy {
+internal enum Accuracy {
 
     /// <summary>
     /// The lowest level of accuracy, which finds many similar candidates. Use

@@ -12,25 +12,15 @@ namespace TriSpell.EditDistanceCalculators;
 /// use of an important observation: For calculating the edit distance at a
 /// certain position in the matrix, it is sufficient to consider only the
 /// current and previous row of edit distances. By reducing the full matrix down
-/// to only two rows, the memory footprint and runtime may improve
-/// significantly.
+/// to only two rows, the memory footprint and runtime can be improved.
 /// </remarks>
-public sealed class IterativeOptimizedMatrixEditDistanceCalculator :
-    IEditDistanceCalculator {
+internal sealed class IterativeOptimizedMatrixEditDistanceCalculator
+    : IEditDistanceCalculator {
 
     /// <summary>
     /// Maximum limit for allocating the distances rows on the stack.
     /// </summary>
     private const int MaxStackAllocLimit = 128;
-
-    /// <inheritdoc/>
-    public string Description => "Iterative Optimized Matrix (Very Fast)";
-
-    /// <summary>
-    /// Initializes a new
-    /// <see cref="IterativeOptimizedMatrixEditDistanceCalculator"/>.
-    /// </summary>
-    public IterativeOptimizedMatrixEditDistanceCalculator() { }
 
     /// <inheritdoc/>
     public int EditDistance(
@@ -44,8 +34,8 @@ public sealed class IterativeOptimizedMatrixEditDistanceCalculator :
         Span<int> currentDistances = (size <= MaxStackAllocLimit)
             ? stackalloc int[size]
             : new int[size];
-        // Empty source prefix can only be transformed into target by inserting
-        // all characters.
+        // The empty source prefix can only be transformed into target by
+        // inserting all characters.
         for (int j = 0; j < previousDistances.Length; j++) {
             previousDistances[j] = j;
         }

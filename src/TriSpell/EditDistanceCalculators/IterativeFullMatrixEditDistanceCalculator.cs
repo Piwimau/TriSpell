@@ -12,25 +12,17 @@ namespace TriSpell.EditDistanceCalculators;
 /// calculations by storing the edit distances between all prefixes of the
 /// source and target string in a two-dimensional matrix. The final value
 /// calculated in the lower right-hand corner is the actual edit distance
-/// between the full strings. See <see href="https://en.wikipedia.org/wiki/Levenshtein_distance">this article</see>
-/// for more information.
+/// between the full strings. See
+/// <see href="https://en.wikipedia.org/wiki/Levenshtein_distance">this article
+/// </see> for more information.
 /// </remarks>
-public sealed class IterativeFullMatrixEditDistanceCalculator :
-    IEditDistanceCalculator {
+internal sealed class IterativeFullMatrixEditDistanceCalculator
+    : IEditDistanceCalculator {
 
     /// <summary>
     /// Maximum limit for allocating the distances matrix on the stack.
     /// </summary>
     private const int MaxStackAllocLimit = 256;
-
-    /// <inheritdoc/>
-    public string Description => "Iterative Full Matrix (Fast)";
-
-    /// <summary>
-    /// Initializes a new
-    /// <see cref="IterativeFullMatrixEditDistanceCalculator"/>.
-    /// </summary>
-    public IterativeFullMatrixEditDistanceCalculator() { }
 
     /// <inheritdoc/>
     public int EditDistance(
@@ -53,8 +45,8 @@ public sealed class IterativeFullMatrixEditDistanceCalculator :
         for (int i = 1; i < rows; i++) {
             distances[i * columns] = i;
         }
-        // Empty source prefix can only be transformed into target by inserting
-        // all characters.
+        // The empty source prefix can only be transformed into target by
+        // inserting all characters.
         for (int j = 1; j < columns; j++) {
             distances[j] = j;
         }
